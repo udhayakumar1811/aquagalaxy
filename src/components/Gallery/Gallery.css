@@ -1,0 +1,175 @@
+.gallery {
+    padding: 40px 0; /* Reduced vertical footprint padding */
+    background: #fff6f3;
+    width: 100%;
+}
+
+/* Header & Watermark Styling */
+.section-title-wrap {
+    text-align: center;
+    position: relative;
+    margin-bottom: 25px; /* Shrunk from 35px */
+    padding: 0 15px;
+}
+
+.title-bg {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 44px; /* Reduced watermark font size */
+    font-weight: 800;
+    color: rgba(255, 107, 0, 0.03);
+    white-space: nowrap;
+    user-select: none;
+    z-index: 1;
+}
+
+.title-main {
+    font-size: 22px; /* Downscaled main headline size */
+    font-weight: 700;
+    color: #0b1c3f;
+    position: relative;
+    z-index: 2;
+}
+
+/* Highly Compact Mosaic Grid Layout Configuration */
+.gallery-container {
+    max-width: 780px; /* Greatly reduced section span width to shink card profiles */
+    margin: 0 auto;
+    padding: 0 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; /* Minimized gutters down to 10px */
+}
+
+/* Downscaled Base Card Configurations */
+.gallery-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #000;
+    aspect-ratio: 1.1 / 1; /* Shrunk down vertical height parameters */
+}
+
+/* Compact Asymmetric Double Width Override Box */
+.gallery-card.large-card {
+    grid-column: span 2; 
+    aspect-ratio: 2.25 / 1; /* Tighter ratio metrics for compressed horizontal card banner look */
+}
+
+.image-box {
+    width: 100%;
+    height: 100%;
+}
+
+.gallery-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Mini Hover Cover Overlay Elements */
+.gallery-overlay-content {
+    position: absolute;
+    inset: 8px; /* Brought overlay borders closer together for small card compatibility */
+    background: rgba(11, 28, 63, 0.85); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.3s ease-in-out;
+    border-radius: 3px;
+    color: #ffffff;
+    z-index: 3;
+    text-align: center;
+    padding: 5px;
+}
+
+.gallery-overlay-content h3 {
+    font-size: 13px; /* Smaller type scale for text content alignment strings */
+    font-weight: 600;
+    margin-bottom: 1px;
+}
+
+.gallery-overlay-content span {
+    font-size: 10px;
+    color: #ff6b00;
+    font-weight: 500;
+    margin-bottom: 6px; /* Tightened element gap spacer block */
+}
+
+/* Micro plus pointer action item button */
+.plus-btn {
+    width: 26px; /* Shrunk trigger target icon profile proportions */
+    height: 26px;
+    background: #ff6b00;
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.plus-btn:hover {
+    background: #ff5500;
+}
+
+/* Active Hover Transitions Engine triggers */
+.gallery-card:hover .gallery-overlay-content {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gallery-card:hover img {
+    transform: scale(1.06); 
+}
+
+/* =======================================================
+   RESPONSIVE DESIGN ADAPTATIONS BREAKPOINTS MATRIX
+   ======================================================= */
+
+@media (max-width: 768px) {
+    .gallery-container {
+        grid-template-columns: repeat(2, 1fr); 
+        max-width: 480px;
+    }
+    
+    .gallery-card.large-card {
+        grid-column: span 2; 
+        aspect-ratio: 2.2 / 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery {
+        padding: 30px 0;
+    }
+
+    .gallery-container {
+        grid-template-columns: 1fr; 
+        max-width: 240px; /* Constrains total view row tightly down on smartphones */
+        padding: 0;
+    }
+
+    .gallery-card.large-card {
+        grid-column: span 1; 
+        aspect-ratio: 1.1 / 1;
+    }
+
+    .title-bg {
+        display: none;
+    }
+
+    .title-main {
+        font-size: 20px;
+    }
+}

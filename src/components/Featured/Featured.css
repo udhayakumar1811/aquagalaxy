@@ -1,0 +1,167 @@
+.featured {
+    padding: 60px 0;
+    background: #fff6f3;
+    width: 100%;
+}
+
+/* Header & Watermark Styling */
+.section-title-wrap {
+    text-align: center;
+    position: relative;
+    margin-bottom: 35px;
+    padding: 0 15px;
+}
+
+.title-bg {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 56px;
+    font-weight: 800;
+    color: rgba(255, 107, 0, 0.03);
+    white-space: nowrap;
+    user-select: none;
+    z-index: 1;
+}
+
+.title-main {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0b1c3f;
+    position: relative;
+    z-index: 2;
+}
+
+/* 4 Columns Desktop Grid Container - REDUCED MAX-WIDTH */
+.featured-grid-container {
+    max-width: 1020px; /* Shrunk overall row span width to compress size */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px; /* Tighter item spacing */
+}
+
+/* Highly Compact Card Sizing */
+.featured-card {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 10px; /* Reduced internal padding from 12px */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featured-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Compact Square Graphic Wrapper */
+.card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    overflow: hidden;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Condensed Internal Positioning Splits */
+.card-details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 10px; /* Reduced top spacer spacing */
+    flex-grow: 1;
+}
+
+.details-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.details-left h3 {
+    font-size: 13px; /* Slightly minimized heading text sizes */
+    font-weight: 600;
+    color: #444;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.details-left .price {
+    font-size: 15px; /* Scaled down pricing size values */
+    font-weight: 700;
+    color: #ff6b00;
+}
+
+/* Compact Actions Stack Panel */
+.details-right-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Tighter button distribution layout vertical gaps */
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #b0bac9;
+    font-size: 12px; /* Smaller hit icon targets */
+    cursor: pointer;
+    padding: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.action-btn:hover {
+    color: #ff6b00;
+    transform: scale(1.15);
+}
+
+/* =======================================================
+   RESPONSIVE DESIGN ADAPTATIONS MATRIX
+   ======================================================= */
+
+@media (max-width: 992px) {
+    .featured-grid-container {
+        grid-template-columns: repeat(3, 1fr); 
+        max-width: 720px;
+    }
+}
+
+@media (max-width: 768px) {
+    .featured-grid-container {
+        grid-template-columns: repeat(2, 1fr); 
+        max-width: 480px;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured {
+        padding: 40px 0;
+    }
+    .featured-grid-container {
+        grid-template-columns: 1fr; 
+        max-width: 250px; /* Keeps cards compact and structured on tiny mobile screens */
+        padding: 0;
+    }
+    .title-bg {
+        display: none;
+    }
+    .title-main {
+        font-size: 22px;
+    }
+}

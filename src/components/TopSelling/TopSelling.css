@@ -1,0 +1,235 @@
+.top-selling {
+    padding: 70px 0;
+    background: #ffffff;
+    width: 100%;
+}
+
+/* Header & Watermark Styling */
+.section-title-wrap {
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+    padding: 0 15px;
+}
+
+.title-bg {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 70px;
+    font-weight: 800;
+    color: rgba(255, 107, 0, 0.03);
+    white-space: nowrap;
+    user-select: none;
+    z-index: 1;
+}
+
+.title-main {
+    font-size: 30px;
+    font-weight: 700;
+    color: #0d1b3e;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Tab Navigation Elements */
+.tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    position: relative;
+    z-index: 2;
+}
+
+.tabs li {
+    padding: 6px 14px;
+    background: #f7f9fc;
+    color: #6b778d;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tabs .active {
+    background: #ff6b00;
+    color: #ffffff;
+}
+
+/* 6-Column Single Row Desktop Layout Container */
+.top-selling .container {
+    max-width: 1440px; 
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); 
+    gap: 15px; 
+}
+
+/* Product Card Box Frame model */
+.product-card {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 10px; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.06);
+}
+
+/* FIXED: Prevent the flex container from distorting the square aspect ratio */
+.product-img-box {
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0; 
+}
+
+.product-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Content Details Internal Positioning Splits */
+.product-details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 10px;
+    flex-grow: 1; /* Pushes the bottom rows to line up evenly */
+}
+
+/* Reduced Text Typography constraints */
+.details-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.details-left h3 {
+    font-size: 13px; 
+    font-weight: 600;
+    color: #444;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.details-left .price {
+    font-size: 15px; 
+    font-weight: 700;
+    color: #0d1b3e;
+    margin: 2px 0;
+}
+
+.stars {
+    color: #ff6b00;
+    display: flex;
+    gap: 1px;
+    font-size: 9px; 
+}
+
+/* Streamlined Right Actions Box Sidebar Panel */
+.details-right-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #b0bac9;
+    font-size: 12px; 
+    cursor: pointer;
+    padding: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.action-btn:hover {
+    color: #ff6b00;
+    transform: scale(1.15);
+}
+
+/* Footer Control Layout Block */
+.see-more-wrap {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.see-more-btn {
+    background: #ff6b00;
+    color: #ffffff;
+    border: none;
+    padding: 10px 35px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.see-more-btn:hover {
+    background: #ff5500;
+    transform: translateY(-2px);
+}
+
+/* =======================================================
+   RESPONSIVE LAYOUT RESPONSES MATRIX
+   ======================================================= */
+
+@media (max-width: 1200px) {
+    .top-selling .container {
+        grid-template-columns: repeat(4, 1fr); 
+        gap: 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .top-selling .container {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+    .title-bg {
+        font-size: 55px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-selling .container {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 480px) {
+    .top-selling {
+        padding: 40px 0;
+    }
+    .top-selling .container {
+        grid-template-columns: 1fr; 
+        max-width: 290px;
+        padding: 0;
+    }
+    .title-bg {
+        display: none;
+    }
+    .title-main {
+        font-size: 24px;
+    }
+}

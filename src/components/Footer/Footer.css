@@ -1,0 +1,127 @@
+.footer {
+    background: #0f172a;
+    color: #fff;
+    padding-top: 45px; /* Significantly reduced from 80px */
+    width: 100%;
+}
+
+/* Reduced Container Span Footprint Constraints */
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px; /* Reduced layout spaces from 40px */
+    width: 90%;
+    max-width: 1080px; /* Constrained boundary edge width */
+    margin: 0 auto;
+    padding-bottom: 30px; /* Reduced structural spacer depth */
+}
+
+/* Mini Header Typography Blocks */
+.footer-box h2 {
+    font-size: 22px; /* Smaller brand headline title size */
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.footer-box h3 {
+    font-size: 15px; /* Downscaled section list headers */
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #f8fafc;
+}
+
+/* Condensed Core Text Attributes */
+.footer-box p.brand-desc {
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 20px; /* Tighter string reading tracking */
+    margin: 0;
+}
+
+/* Tighter List Alignments */
+.footer-box ul {
+    list-style: none;
+}
+
+.footer-box ul li {
+    font-size: 13px; /* Smaller bullet text size metrics */
+    margin-bottom: 8px; /* Compressed element tracking spaces down from 12px */
+    cursor: pointer;
+    color: #cbd5e1;
+    transition: color 0.2s ease;
+}
+
+.footer-box ul li:hover {
+    color: #38bdf8;
+}
+
+/* Inline Contact Information Modules */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.contact-icon {
+    color: #38bdf8; /* Distinct matching blue icon styling */
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+/* Compact Social Icon Footprint Sets */
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    font-size: 16px; /* Reduced icon scale wrapper parameters from 20px */
+}
+
+.social-icons svg {
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.social-icons svg:hover {
+    color: #38bdf8;
+    transform: translateY(-2px);
+}
+
+/* Mini Footer Copyright Divider Block */
+.copyright {
+    text-align: center;
+    padding: 15px; /* Shrunk vertical spacing blocks from 25px */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* =======================================================
+   FULLY RESPONSIVE CASCADE MEDIA GRID SYSTEM
+   ======================================================= */
+
+/* Notebooks & Landscape Displays */
+@media (max-width: 992px) {
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr); /* Collapses down cleanly into 2 columns */
+        gap: 30px;
+    }
+}
+
+/* Smartphone Portrait Viewports */
+@media (max-width: 540px) {
+    .footer {
+        padding-top: 35px;
+    }
+    .footer-container {
+        grid-template-columns: 1fr; /* 1 vertical single full stacked block column layout */
+        gap: 25px;
+        text-align: left;
+    }
+    .social-icons {
+        justify-content: flex-start;
+    }
+}

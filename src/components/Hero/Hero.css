@@ -1,0 +1,148 @@
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    background-image: url("../../assets/images/heroBgImage.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    
+    /* Centering system */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px; /* Safe padding prevents contents touching viewport borders on short heights */
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    max-width: 800px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.hero-content h1 {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-description {
+    width: 100%;
+    max-width: 550px; 
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.hero-btn {
+    background: #ff6b00;
+    color: #fff;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.hero-btn:hover {
+    background: #ff5500;
+    transform: translateY(-2px);
+}
+
+/* Slider Indicators Base Setup */
+.carousel-indicators-custom {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+}
+
+.carousel-indicators-custom .dot {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 107, 0, 0.4);
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators-custom .dot.active {
+    width: 24px;
+    border-radius: 5px;
+    background: #ff6b00;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS (MOBILE FIRST DECAY)
+   ========================================== */
+
+/* 1. Tablets / Small Desktops (e.g. iPads, small laptops) */
+@media (max-width: 992px) {
+    .hero-content h1 {
+        font-size: 46px; /* Smooth downscale to avoid layout stretching */
+    }
+    .hero-description {
+        max-width: 500px;
+        font-size: 14px;
+    }
+}
+
+/* 2. Landscape Mobile / Large Mobile Devices */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 100vh; /* Keeps fullscreen impact on mobile */
+        padding-top: 80px;  /* Leaves space for potential mobile navbars */
+        padding-bottom: 80px;
+    }
+    .hero-content h1 {
+        font-size: 36px;
+        line-height: 1.25;
+    }
+    .hero-description {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+    }
+    .hero-btn {
+        padding: 12px 30px;
+        font-size: 15px;
+    }
+    .carousel-indicators-custom {
+        bottom: 20px; /* Slightly raises indicator panel out of extreme hardware margins */
+    }
+}
+
+/* 3. Small Mobile Devices (e.g., iPhone SE, older phones) */
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 30px; /* Strong downscale ensures title fits without single-letter word breaks */
+    }
+    .hero-description {
+        font-size: 13px;
+    }
+    .hero-btn {
+        width: 100%; /* Makes button hit-target full-width for easier thumb clicking on tiny viewports */
+        max-width: 240px;
+    }
+}
