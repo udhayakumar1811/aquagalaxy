@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { API_URL, getImageUrl } from "../../config";
+import { CartContext } from "../../context/CartContext"; // 👈 Context Import
 import "./Product.css";
 
 function Product() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const { addToCart } = useContext(CartContext); // 👈 Access addToCart
 
   useEffect(() => {
     fetch(`${API_URL}/api/products/${id}`)
@@ -44,9 +47,7 @@ function Product() {
         <Navbar />
         <div style={{ padding: "100px", textAlign: "center" }}>
           <h2>Product Not Found!</h2>
-          <Link to="/shop" className="back-link">
-            ← Back to Shop Page
-          </Link>
+          <Link to="/shop" className="back-link">← Back to Shop Page</Link>
         </div>
         <Footer />
       </>
@@ -59,7 +60,6 @@ function Product() {
       <section className="details-section">
         <div className="details-wrapper">
           <div className="image-container">
-            {/* 👈 Dynamic Render Image URL */}
             <img src={getImageUrl(product.image)} alt={product.name} />
           </div>
 
@@ -74,7 +74,11 @@ function Product() {
             <p style={{ marginTop: "10px", color: "#666" }}>
               Available Stock: {product.qnt} items
             </p>
-            <button className="cart-btn">Add To Cart</button>
+
+            {/* 👈 Add To Cart Button Handler */}
+            <button className="cart-btn" onClick={() => addToCart(product)}>
+              Add To Cart
+            </button>
             <br />
             <Link to="/shop" className="back-link">
               ← Back to Shop Page

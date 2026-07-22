@@ -1,77 +1,11 @@
-/* ==========================================
-   Navbar Layout Structure
-   ========================================== */
-
-/* Spreading out the logo, menu, and icons across the page */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Base navbar container styling */
-.navbar {
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    width: 100%;
-}
-
-.logo h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-/* ==========================================
-   Navigation Menu Layout
-   ========================================== */
-
-/* Turns vertical bullet list into a horizontal row */
-.menu {
-    display: flex;
-    list-style: none; /* Removes the bullet points */
-    margin: 0;
-    padding: 0;
-    gap: 30px; /* Puts consistent spacing between menu items */
-}
-
-.menu a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
-
-/* Active and Hover States for Links */
-.menu a.active,
-.menu a:hover {
-    color: #0099cc;
-}
-
-/* ==========================================
-   Icons Layout
-   ========================================== */
-
-/* Arranges icons in a horizontal row and separates them */
-.icons {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Puts breathing room between the icons */
-}
-
-.icons a {
-    color: #333;
-    font-size: 1.2rem; /* Normalizes the icon sizes */
-    display: flex;
-    align-items: center;
-    transition: color 0.2s ease;
-}
-
-/* Active and Hover States for Icons */
-.icons a:hover,
-.icons a.active {
-    color: #0099cc;
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #ff6b00;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
 }

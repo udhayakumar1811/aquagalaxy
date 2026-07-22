@@ -5,19 +5,15 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/shop";
 import Product from "./pages/Product/Product";
+import Cart from "./pages/Cart/Cart"; // 👈 Import Cart Page
 
 function App() {
   return (
-    // REMOVED <Router> wrappers from here since it's already in main.jsx
     <Routes>
-      {/* Home Page route */}
       <Route path="/" element={<Home />} />
-      
-      {/* Shop List Page route */}
       <Route path="/shop" element={<Shop />} />
-      
-      {/* Dynamic Route configuration for single product details page */}
       <Route path="/shop/:id" element={<Product />} />
+      <Route path="/cart" element={<Cart />} /> {/* 👈 Add Cart Route */}
     </Routes>
   );
 }
