@@ -1,26 +1,24 @@
-import Navbar from "./components/Navbar/Navbar";
-import Hero from "./components/Hero/Hero";
-import Categories from "./components/Categories/Categories";
-import TopSelling from "./components/TopSelling/TopSelling";
-import OfferBanner from "./components/OfferBanner/OfferBanner";
-import Featured from "./components/Featured/Featured";
-import Gallery from "./components/Gallery/Gallery";
-import Newsletter from "./components/Newsletter/Newsletter";
-import Footer from "./components/Footer/Footer";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+// PAGES IMPORT
+import Home from "./pages/Home/Home";
+import Shop from "./pages/Shop/shop";
+import Product from "./pages/Product/Product";
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <Hero />
-      <Categories />
-      <TopSelling />
-      <OfferBanner />
-      <Featured />
-      <Gallery />
-      <Newsletter />
-      <Footer />
-    </>
+    // REMOVED <Router> wrappers from here since it's already in main.jsx
+    <Routes>
+      {/* Home Page route */}
+      <Route path="/" element={<Home />} />
+      
+      {/* Shop List Page route */}
+      <Route path="/shop" element={<Shop />} />
+      
+      {/* Dynamic Route configuration for single product details page */}
+      <Route path="/shop/:id" element={<Product />} />
+    </Routes>
   );
 }
 

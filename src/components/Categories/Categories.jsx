@@ -1,11 +1,30 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Categories.css";
-import catImg1 from "../../assets/images/cat-aquariums.jpg"; 
-import catImg2 from "../../assets/images/cat-fish.jpg";
-import catImg3 from "../../assets/images/cat-food.jpg";
-import catImg4 from "../../assets/images/cat-plants.jpg"; 
-import catImg5 from "../../assets/images/cat-accessories.jpg"; 
 
 function Categories() {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/category")
+      .then((res) => res.json())
+      .then((data) => {
+        setCategories(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleCategoryClick = (categoryId) => {
+    // Navigates to Shop page with category filter parameter
+    navigate(`/shop?category=${categoryId}`);
+  };
+
   return (
     <section className="categories">
       <div className="section-title-wrap">
@@ -14,77 +33,35 @@ function Categories() {
       </div>
 
       <div className="container">
-        
-        {/* Card 1 */}
-        <div className="category-card">
-          <div className="card-header-text">
-            <h3>Aquariums</h3>
-            <span className="item-count">40 Items</span>
-          </div>
-          <div className="category-img-wrapper">
-            <img src={catImg1} alt="Aquariums" />
-          </div>
-          <button className="category-btn">
-            <span className="btn-text">Shop Now </span>→
-          </button>
-        </div>
-
-        {/* Card 2 */}
-        <div className="category-card">
-          <div className="card-header-text">
-            <h3>Aquarium Fish</h3>
-            <span className="item-count">90 Items</span>
-          </div>
-          <div className="category-img-wrapper">
-            <img src={catImg2} alt="Aquarium Fish" />
-          </div>
-          <button className="category-btn">
-            <span className="btn-text">Shop Now </span>→
-          </button>
-        </div>
-
-        {/* Card 3 */}
-        <div className="category-card">
-          <div className="card-header-text">
-            <h3>Fish Food</h3>
-            <span className="item-count">60 Items</span>
-          </div>
-          <div className="category-img-wrapper">
-            <img src={catImg3} alt="Fish Food" />
-          </div>
-          <button className="category-btn">
-            <span className="btn-text">Shop Now </span>→
-          </button>
-        </div>
-
-        {/* Card 4 */}
-        <div className="category-card">
-          <div className="card-header-text">
-            <h3>Aquatic Plants</h3>
-            <span className="item-count">35 Items</span>
-          </div>
-          <div className="category-img-wrapper">
-            <img src={catImg4} alt="Aquatic Plants" />
-          </div>
-          <button className="category-btn">
-            <span className="btn-text">Shop Now </span>→
-          </button>
-        </div>
-
-        {/* Card 5 */}
-        <div className="category-card">
-          <div className="card-header-text">
-            <h3>Accessories</h3>
-            <span className="item-count">120 Items</span>
-          </div>
-          <div className="category-img-wrapper">
-            <img src={catImg5} alt="Accessories" />
-          </div>
-          <button className="category-btn">
-            <span className="btn-text">Shop Now </span>→
-          </button>
-        </div>
-
+        {loading ? (
+          <p style={{ textAlign: "center", gridColumn: "1 / -1" }}>
+            Loading Categories...
+          </p>
+        ) : categories.length === 0 ? (
+          <p style={{ textAlign: "center", gridColumn: "1 / -1" }}>
+            No categories available in database.
+          </p>
+        ) : (
+          categories.map((cat) => (
+            <div
+              className="category-card"
+              key={cat._id}
+              onClick={() => handleCategoryClick(cat._id)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="card-header-text">
+                <h3>{cat.name}</h3>
+                <span className="item-count">{cat.count || 0} Items</span>
+              </div>
+              <div className="category-img-wrapper">
+                <img src={cat.image} alt={cat.name} />
+              </div>
+              <button className="category-btn">
+                <span className="btn-text">Shop Now </span>→
+              </button>
+            </div>
+          ))
+        )}
       </div>
     </section>
   );

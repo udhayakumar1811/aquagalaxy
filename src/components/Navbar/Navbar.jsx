@@ -1,43 +1,53 @@
-import { useState } from "react";
 import "./Navbar.css";
-import { FaSearch, FaHeart, FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaSearch,
+  FaHeart,
+  FaShoppingCart,
+  FaUser,
+} from "react-icons/fa";
+
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   return (
     <nav className="navbar">
       <div className="container">
-
+        
         <div className="logo">
           <h2>Aquafy</h2>
         </div>
 
-        {/* Dynamic open class driven by toggle state */}
-        <ul className={`menu ${isMenuOpen ? "open" : ""}`}>
-          <li><a href="#" onClick={() => setIsMenuOpen(false)}>Home</a></li>
-          <li><a href="#" onClick={() => setIsMenuOpen(false)}>Shop</a></li>
-          <li><a href="#" onClick={() => setIsMenuOpen(false)}>Categories</a></li>
-          <li><a href="#" onClick={() => setIsMenuOpen(false)}>Blog</a></li>
-          <li><a href="#" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+        <ul className="menu">
+          <li>
+            <NavLink to="/">Home</NavLink>
+          </li>
+          <li>
+            <NavLink to="/shop">Shop</NavLink>
+          </li>
+          <li>
+            <NavLink to="/about">About</NavLink>
+          </li>
+          <li>
+            <NavLink to="/contact">Contact</NavLink>
+          </li>
         </ul>
 
-        <div className="nav-right">
-          <div className="icons">
+        <div className="icons">
+          <NavLink to="/search" className="icon-link">
             <FaSearch />
-            <FaHeart />
-            <FaShoppingCart />
-            <FaUser />
-          </div>
+          </NavLink>
 
-          {/* Hamburger Icon Switcher Button */}
-          <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle navigation menu">
-            {isMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
+          <NavLink to="/wishlist" className="icon-link">
+            <FaHeart />
+          </NavLink>
+
+          <NavLink to="/cart" className="icon-link">
+            <FaShoppingCart />
+          </NavLink>
+
+          <NavLink to="/profile" className="icon-link">
+            <FaUser />
+          </NavLink>
         </div>
 
       </div>

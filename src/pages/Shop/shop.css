@@ -1,0 +1,78 @@
+/* ==========================================
+   Shop Page Layout Grid System
+   ========================================== */
+.shop-container {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.shop-title {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #222;
+    margin-bottom: 40px;
+}
+
+/* Flex layout turned grid structure for alignment */
+.products-grid {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Individual Product Card Blueprint */
+.product-card {
+    background: #fff;
+    border: 1px solid #eef2f5;
+    border-radius: 12px;
+    padding: 20px;
+    width: 260px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Images structural deformation thadukka use aagum */
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.product-card h3 {
+    font-size: 1.15rem;
+    color: #333;
+    margin: 10px 0;
+}
+
+.product-price {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #0099cc;
+    margin-bottom: 15px;
+}
+
+/* Action button configurations */
+.view-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0099cc;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.view-btn:hover {
+    background-color: #0077a3;
+}

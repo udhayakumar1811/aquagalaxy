@@ -1,182 +1,77 @@
-/* Google Font Import */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+/* ==========================================
+   Navbar Layout Structure
+   ========================================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
-
-.navbar {
-    width: 100%;
-    background: #0a1d37;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    padding: 18px 0;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-}
-
+/* Spreading out the logo, menu, and icons across the page */
 .container {
-    width: 90%;
-    max-width: 1320px;
-    margin: auto;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.logo h2 {
-    color: #ffffff;
-    font-size: 30px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    gap: 35px;
-}
-
-.menu li a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 17px;
-    font-weight: 500;
-    transition: 0.3s;
-    position: relative;
-}
-
-.menu li a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0%;
-    height: 2px;
-    background: #ff9800;
-    transition: 0.3s;
-}
-
-.menu li a:hover {
-    color: #ff9800;
-}
-
-.menu li a:hover::after {
+/* Base navbar container styling */
+.navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     width: 100%;
 }
 
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.icons {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-}
-
-.icons svg {
-    color: #ffffff;
-    font-size: 20px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.icons svg:hover {
-    color: #ff9800;
-    transform: scale(1.15);
-}
-
-/* Hidden by default on large screen displays */
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #ffffff;
-    font-size: 24px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.menu-toggle:hover {
-    color: #ff9800;
+.logo h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
 }
 
 /* ==========================================
-   RESPONSIVE LAYOUT SYSTEM
+   Navigation Menu Layout
    ========================================== */
 
-/* Tablet Optimization Layout */
-@media(max-width: 992px) {
-    .menu {
-        gap: 20px;
-    }
-    .menu li a {
-        font-size: 15px;
-    }
-    .logo h2 {
-        font-size: 26px;
-    }
-    .icons {
-        gap: 16px;
-    }
+/* Turns vertical bullet list into a horizontal row */
+.menu {
+    display: flex;
+    list-style: none; /* Removes the bullet points */
+    margin: 0;
+    padding: 0;
+    gap: 30px; /* Puts consistent spacing between menu items */
 }
 
-/* Mobile Flyout Drawer Layout System */
-@media(max-width: 768px) {
-    .navbar {
-        padding: 14px 0;
-    }
+.menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
 
-    .menu-toggle {
-        display: block; /* Mount the toggle bar on device screens */
-    }
+/* Active and Hover States for Links */
+.menu a.active,
+.menu a:hover {
+    color: #0099cc;
+}
 
-    /* Transform navigation menus into an overlay drawer container panel */
-    .menu {
-        position: absolute;
-        top: 100%; /* Drops exactly below the navbar container bounding box */
-        left: 0;
-        width: 100%;
-        background: #0a1d37;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-        max-height: 0; /* Keeps drawer visually hidden naturally */
-        overflow: hidden;
-        transition: max-height 0.4s ease-in-out, box-shadow 0.3s;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0);
-    }
+/* ==========================================
+   Icons Layout
+   ========================================== */
 
-    .menu li {
-        width: 100%;
-        text-align: center;
-    }
+/* Arranges icons in a horizontal row and separates them */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Puts breathing room between the icons */
+}
 
-    .menu li a {
-        display: block;
-        padding: 15px 0;
-        width: 100%;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
+.icons a {
+    color: #333;
+    font-size: 1.2rem; /* Normalizes the icon sizes */
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+}
 
-    .menu li a::after {
-        display: none; /* Disables standard bottom underlining on full-width mobile grids */
-    }
-
-    /* Activated state applied by React hook execution mapping */
-    .menu.open {
-        max-height: 300px; /* Calculates maximum container heights cleanly */
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .logo h2 {
-        font-size: 24px;
-    }
+/* Active and Hover States for Icons */
+.icons a:hover,
+.icons a.active {
+    color: #0099cc;
 }

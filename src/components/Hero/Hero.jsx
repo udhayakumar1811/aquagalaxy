@@ -20,12 +20,7 @@ function Hero() {
           Shop Now &rarr;
         </button>
       </div>
-
-      <div className="carousel-indicators-custom">
-        <span className="dot"></span>
-        <span className="dot active"></span>
-        <span className="dot"></span>
-      </div>
+      
     </section>
   );
 }
