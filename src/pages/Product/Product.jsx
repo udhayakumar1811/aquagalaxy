@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-
-// COMPONENTS IMPORT
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
-
-// STYLES IMPORT
+import { API_URL, getImageUrl } from "../../config";
 import "./Product.css";
 
 function Product() {
@@ -14,9 +11,7 @@ function Product() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Old: fetch(`http://localhost:5000/api/products/${id}`)
-// New:
-fetch(`http://127.0.0.1:5000/api/products/${id}`)
+    fetch(`${API_URL}/api/products/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Product not found");
         return res.json();
@@ -36,7 +31,7 @@ fetch(`http://127.0.0.1:5000/api/products/${id}`)
       <>
         <Navbar />
         <div style={{ padding: "100px", textAlign: "center" }}>
-          <h2>Loading Product Details...</h2>
+          <h2>Loading Product...</h2>
         </div>
         <Footer />
       </>
@@ -49,7 +44,9 @@ fetch(`http://127.0.0.1:5000/api/products/${id}`)
         <Navbar />
         <div style={{ padding: "100px", textAlign: "center" }}>
           <h2>Product Not Found!</h2>
-          <Link to="/shop" className="back-link">← Back to Shop</Link>
+          <Link to="/shop" className="back-link">
+            ← Back to Shop Page
+          </Link>
         </div>
         <Footer />
       </>
@@ -59,36 +56,32 @@ fetch(`http://127.0.0.1:5000/api/products/${id}`)
   return (
     <>
       <Navbar />
-      
       <section className="details-section">
         <div className="details-wrapper">
-          
           <div className="image-container">
-            <img src={`http://localhost:5000/${product.image}`} alt={product.name} />
+            {/* 👈 Dynamic Render Image URL */}
+            <img src={getImageUrl(product.image)} alt={product.name} />
           </div>
 
           <div className="info-container">
-            <span className="category-tag">Aquarium Collection</span>
+            <span className="category-tag">
+              {product.category_id?.name || "Aquarium Collection"}
+            </span>
             <h1 className="product-name">{product.name}</h1>
             <h2 className="details-price">₹{product.price}</h2>
-            
             <hr className="separator" />
-            
-            <p className="description">
-              Available Quantity: {product.qnt ?? 0} items
+            <p className="description">{product.desc || "No description available."}</p>
+            <p style={{ marginTop: "10px", color: "#666" }}>
+              Available Stock: {product.qnt} items
             </p>
-            
             <button className="cart-btn">Add To Cart</button>
-            
             <br />
             <Link to="/shop" className="back-link">
               ← Back to Shop Page
             </Link>
           </div>
-
         </div>
       </section>
-
       <Footer />
     </>
   );

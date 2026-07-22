@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL, getImageUrl } from "../../config";
 import "./Categories.css";
 
 function Categories() {
@@ -8,7 +9,7 @@ function Categories() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/category")
+    fetch(`${API_URL}/api/category`)
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -21,7 +22,6 @@ function Categories() {
   }, []);
 
   const handleCategoryClick = (categoryId) => {
-    // Navigates to Shop page with category filter parameter
     navigate(`/shop?category=${categoryId}`);
   };
 
@@ -54,7 +54,8 @@ function Categories() {
                 <span className="item-count">{cat.count || 0} Items</span>
               </div>
               <div className="category-img-wrapper">
-                <img src={cat.image} alt={cat.name} />
+                {/* 👈 Dynamic Render Image URL */}
+                <img src={getImageUrl(cat.image)} alt={cat.name} />
               </div>
               <button className="category-btn">
                 <span className="btn-text">Shop Now </span>→

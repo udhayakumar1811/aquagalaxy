@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { Link, useLocation } from "react-router-dom";
+import { API_URL, getImageUrl } from "../../config";
 import "./shop.css";
 
 function Shop() {
@@ -15,16 +16,13 @@ function Shop() {
 
   useEffect(() => {
     setLoading(true);
-    // API endpoint with optional category parameter
     const apiUrl = selectedCategory
-      ? `http://localhost:5000/api/products?category=${selectedCategory}`
-      : "http://localhost:5000/api/products";
+      ? `${API_URL}/api/products?category=${selectedCategory}`
+      : `${API_URL}/api/products`;
 
     fetch(apiUrl)
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Server Response Not OK");
-        }
+        if (!res.ok) throw new Error("Server Response Not OK");
         return res.json();
       })
       .then((data) => {
@@ -55,20 +53,18 @@ function Shop() {
         )}
 
         {loading && <h2 style={{ textAlign: "center" }}>Loading Products...</h2>}
-
         {error && <h2 style={{ textAlign: "center", color: "red" }}>{error}</h2>}
 
         {!loading && !error && products.length === 0 && (
-          <h2 style={{ textAlign: "center" }}>
-            No products found for this category!
-          </h2>
+          <h2 style={{ textAlign: "center" }}>No products found!</h2>
         )}
 
         {!loading && !error && products.length > 0 && (
           <div className="products-grid">
             {products.map((product) => (
               <div key={product._id} className="product-card">
-                <img src={product.image} alt={product.name} />
+                {/* 👈 Dynamic Render Image URL */}
+                <img src={getImageUrl(product.image)} alt={product.name} />
                 <h3>{product.name}</h3>
                 <p className="product-price">₹{product.price}</p>
                 <Link to={`/shop/${product._id}`} className="view-btn">
