@@ -16,17 +16,25 @@ function Shop() {
 
   useEffect(() => {
     setLoading(true);
-    const apiUrl = selectedCategory
-      ? `${API_URL}/api/products?category=${selectedCategory}`
-      : `${API_URL}/api/products`;
+    setError(null);
 
-    fetch(apiUrl)
+    // Fetch all products
+    fetch(`${API_URL}/api/products`)
       .then((res) => {
         if (!res.ok) throw new Error("Server Response Not OK");
         return res.json();
       })
       .then((data) => {
-        setProducts(data);
+        // Filter logic if category query param exists
+        if (selectedCategory) {
+          const filtered = data.filter((item) => {
+            const catId = item.category_id?._id || item.category_id;
+            return catId === selectedCategory;
+          });
+          setProducts(filtered);
+        } else {
+          setProducts(data);
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -46,24 +54,28 @@ function Shop() {
 
         {selectedCategory && (
           <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <Link to="/shop" style={{ color: "#ff6b00", textDecoration: "underline" }}>
+            <Link to="/shop" style={{ color: "#ff6b00", textDecoration: "underline", fontWeight: "bold" }}>
               Show All Products
             </Link>
           </div>
         )}
 
-        {loading && <h2 style={{ textAlign: "center" }}>Loading Products...</h2>}
-        {error && <h2 style={{ textAlign: "center", color: "red" }}>{error}</h2>}
+        {loading && <h2 style={{ textAlign: "center", margin: "40px 0" }}>Loading Products...</h2>}
+        {error && <h2 style={{ textAlign: "center", color: "red", margin: "40px 0" }}>{error}</h2>}
 
         {!loading && !error && products.length === 0 && (
-          <h2 style={{ textAlign: "center" }}>No products found!</h2>
+          <div style={{ textAlign: "center", margin: "50px 0" }}>
+            <h2>No products found for this category!</h2>
+            <p style={{ marginTop: "10px" }}>
+              Try selecting another category or view all products.
+            </p>
+          </div>
         )}
 
         {!loading && !error && products.length > 0 && (
           <div className="products-grid">
             {products.map((product) => (
               <div key={product._id} className="product-card">
-                {/* 👈 Dynamic Render Image URL */}
                 <img src={getImageUrl(product.image)} alt={product.name} />
                 <h3>{product.name}</h3>
                 <p className="product-price">₹{product.price}</p>
