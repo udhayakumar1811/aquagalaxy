@@ -9,8 +9,7 @@ import {
   FaCog, 
   FaSignOutAlt,
   FaEdit,
-  FaTrash,
-  FaUpload
+  FaTrash
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
@@ -64,7 +63,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // HELPER: FILE UPLOAD TO BACKEND
+  // HELPER: UPLOAD FILE TO BACKEND
   const uploadFileHandler = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -76,7 +75,7 @@ function Dashboard() {
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Upload failed");
-    return data.filePath; // Returns uploaded relative path e.g. uploads/xxx.jpg
+    return data.filePath;
   };
 
   // 1. ADD CATEGORY
@@ -103,19 +102,20 @@ function Dashboard() {
         fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error uploading/adding category");
+      setMessage("❌ Error adding category");
     } finally {
       setCatUploading(false);
     }
   };
 
-  // EDIT CATEGORY SUBMIT
+  // EDIT CATEGORY SUBMIT (FIXED 🚀)
   const handleUpdateCategorySubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
       let imagePath = editingCategory.image;
 
-      // New file selected check
       if (editingCategory.newFile) {
         imagePath = await uploadFileHandler(editingCategory.newFile);
       }
@@ -131,9 +131,11 @@ function Dashboard() {
       });
 
       if (res.ok) {
-        setMessage("✏️ Category Updated!");
+        setMessage("✏️ Category Updated Successfully!");
         setEditingCategory(null);
         fetchData();
+      } else {
+        setMessage("❌ Failed to update category");
       }
     } catch (err) {
       setMessage("❌ Error updating category");
@@ -190,15 +192,17 @@ function Dashboard() {
         fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error uploading/adding product");
+      setMessage("❌ Error adding product");
     } finally {
       setProdUploading(false);
     }
   };
 
-  // EDIT PRODUCT SUBMIT
+  // EDIT PRODUCT SUBMIT (FIXED 🚀)
   const handleUpdateProductSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
       let imagePath = editingProduct.image;
 
@@ -206,11 +210,13 @@ function Dashboard() {
         imagePath = await uploadFileHandler(editingProduct.newFile);
       }
 
+      const catId = editingProduct.category_id?._id || editingProduct.category_id;
+
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          category_id: editingProduct.category_id?._id || editingProduct.category_id,
+          category_id: catId,
           name: editingProduct.name,
           price: Number(editingProduct.price),
           qnt: Number(editingProduct.qnt),
@@ -220,9 +226,11 @@ function Dashboard() {
       });
 
       if (res.ok) {
-        setMessage("✏️ Product Updated!");
+        setMessage("✏️ Product Updated Successfully!");
         setEditingProduct(null);
         fetchData();
+      } else {
+        setMessage("❌ Failed to update product");
       }
     } catch (err) {
       setMessage("❌ Error updating product");
@@ -294,7 +302,7 @@ function Dashboard() {
           <h1>Dashboard Overview</h1>
         </div>
 
-        {/* TOP ANALYTICS STATS CARDS */}
+        {/* STATS */}
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-title">Total Products</div>
@@ -320,7 +328,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* OVERVIEW TAB */}
+        {/* OVERVIEW */}
         {activeTab === "overview" && (
           <div className="panel-card">
             <h2>Recent Activity & Inventory Summary</h2>
@@ -348,7 +356,6 @@ function Dashboard() {
                     />
                   </div>
 
-                  {/* 👈 FILE UPLOAD INPUT */}
                   <div className="admin-input-group">
                     <label>Upload Category Image File</label>
                     <input
@@ -385,7 +392,6 @@ function Dashboard() {
                       <td><strong>{c.name}</strong></td>
                       <td>{c.count || 0} Items</td>
                       <td>
-                        {/* 👈 CATEGORY EDIT BUTTON */}
                         <button
                           className="action-btn edit"
                           onClick={() => setEditingCategory(c)}
@@ -464,7 +470,6 @@ function Dashboard() {
                   </div>
                 </div>
 
-                {/* 👈 FILE UPLOAD INPUT */}
                 <div className="admin-input-group">
                   <label>Upload Product Image File</label>
                   <input
