@@ -9,7 +9,8 @@ import {
   FaCog, 
   FaSignOutAlt,
   FaEdit,
-  FaTrash
+  FaTrash,
+  FaUpload
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
@@ -23,19 +24,22 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
-  // Category Form State
+  // Category State
   const [catName, setCatName] = useState("");
-  const [catImage, setCatImage] = useState("");
+  const [catImageFile, setCatImageFile] = useState(null);
+  const [catUploading, setCatUploading] = useState(false);
 
-  // Product Form State
+  // Product State
   const [prodName, setProdName] = useState("");
   const [prodCategory, setProdCategory] = useState("");
   const [prodPrice, setProdPrice] = useState("");
   const [prodQnt, setProdQnt] = useState("");
-  const [prodImage, setProdImage] = useState("");
+  const [prodImageFile, setProdImageFile] = useState(null);
   const [prodDesc, setProdDesc] = useState("");
+  const [prodUploading, setProdUploading] = useState(false);
 
-  // Edit Modal State
+  // Edit Modals
+  const [editingCategory, setEditingCategory] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
 
   const fetchData = async () => {
@@ -60,26 +64,79 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // 1. ADD / UPDATE CATEGORY
+  // HELPER: FILE UPLOAD TO BACKEND
+  const uploadFileHandler = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch(`${API_URL}/api/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Upload failed");
+    return data.filePath; // Returns uploaded relative path e.g. uploads/xxx.jpg
+  };
+
+  // 1. ADD CATEGORY
   const handleAddCategory = async (e) => {
     e.preventDefault();
     setMessage("");
 
     try {
+      if (!catImageFile) return alert("Please select an image file");
+
+      setCatUploading(true);
+      const imagePath = await uploadFileHandler(catImageFile);
+
       const res = await fetch(`${API_URL}/api/category`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: catName, image: catImage, isCategory: true }),
+        body: JSON.stringify({ name: catName, image: imagePath, isCategory: true }),
       });
 
       if (res.ok) {
         setMessage("✅ Category Created Successfully!");
         setCatName("");
-        setCatImage("");
+        setCatImageFile(null);
         fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error adding category");
+      setMessage("❌ Error uploading/adding category");
+    } finally {
+      setCatUploading(false);
+    }
+  };
+
+  // EDIT CATEGORY SUBMIT
+  const handleUpdateCategorySubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let imagePath = editingCategory.image;
+
+      // New file selected check
+      if (editingCategory.newFile) {
+        imagePath = await uploadFileHandler(editingCategory.newFile);
+      }
+
+      const res = await fetch(`${API_URL}/api/category/${editingCategory._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editingCategory.name,
+          image: imagePath,
+          isCategory: true,
+        }),
+      });
+
+      if (res.ok) {
+        setMessage("✏️ Category Updated!");
+        setEditingCategory(null);
+        fetchData();
+      }
+    } catch (err) {
+      setMessage("❌ Error updating category");
     }
   };
 
@@ -88,18 +145,13 @@ function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/category/${id}`, {
-        method: "DELETE",
-      });
-
+      const res = await fetch(`${API_URL}/api/category/${id}`, { method: "DELETE" });
       if (res.ok) {
         setMessage("🗑️ Category Deleted!");
         fetchData();
-      } else {
-        setMessage("❌ Failed to delete category");
       }
     } catch (err) {
-      setMessage("❌ Server error while deleting category");
+      setMessage("❌ Error deleting category");
     }
   };
 
@@ -109,6 +161,11 @@ function Dashboard() {
     setMessage("");
 
     try {
+      if (!prodImageFile) return alert("Please select a product image file");
+
+      setProdUploading(true);
+      const imagePath = await uploadFileHandler(prodImageFile);
+
       const res = await fetch(`${API_URL}/api/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,7 +174,7 @@ function Dashboard() {
           name: prodName,
           price: Number(prodPrice),
           qnt: Number(prodQnt),
-          image: prodImage,
+          image: imagePath,
           desc: prodDesc,
         }),
       });
@@ -128,44 +185,27 @@ function Dashboard() {
         setProdCategory("");
         setProdPrice("");
         setProdQnt("");
-        setProdImage("");
+        setProdImageFile(null);
         setProdDesc("");
         fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error adding product");
+      setMessage("❌ Error uploading/adding product");
+    } finally {
+      setProdUploading(false);
     }
   };
 
-  // DELETE PRODUCT
-  const handleDeleteProduct = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
-
-    try {
-      const res = await fetch(`${API_URL}/api/products/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        setMessage("🗑️ Product Deleted!");
-        fetchData();
-      } else {
-        setMessage("❌ Failed to delete product");
-      }
-    } catch (err) {
-      setMessage("❌ Server error while deleting product");
-    }
-  };
-
-  // EDIT PRODUCT MODAL OPEN
-  const handleEditClick = (product) => {
-    setEditingProduct(product);
-  };
-
-  // UPDATE PRODUCT SUBMIT
+  // EDIT PRODUCT SUBMIT
   const handleUpdateProductSubmit = async (e) => {
     e.preventDefault();
     try {
+      let imagePath = editingProduct.image;
+
+      if (editingProduct.newFile) {
+        imagePath = await uploadFileHandler(editingProduct.newFile);
+      }
+
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -174,20 +214,33 @@ function Dashboard() {
           name: editingProduct.name,
           price: Number(editingProduct.price),
           qnt: Number(editingProduct.qnt),
-          image: editingProduct.image,
+          image: imagePath,
           desc: editingProduct.desc,
         }),
       });
 
       if (res.ok) {
-        setMessage("✏️ Product Updated Successfully!");
+        setMessage("✏️ Product Updated!");
         setEditingProduct(null);
         fetchData();
-      } else {
-        setMessage("❌ Failed to update product");
       }
     } catch (err) {
       setMessage("❌ Error updating product");
+    }
+  };
+
+  // DELETE PRODUCT
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/products/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setMessage("🗑️ Product Deleted!");
+        fetchData();
+      }
+    } catch (err) {
+      setMessage("❌ Error deleting product");
     }
   };
 
@@ -267,17 +320,17 @@ function Dashboard() {
           </div>
         )}
 
-        {/* TAB 1: OVERVIEW TAB */}
+        {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="panel-card">
             <h2>Recent Activity & Inventory Summary</h2>
             <p style={{ color: "#64748b" }}>
-              Welcome back Admin! Select <strong>Categories</strong> or <strong>Products</strong> from the sidebar to manage store inventory.
+              Welcome back Admin! Select <strong>Categories</strong> or <strong>Products</strong> from sidebar to manage inventory.
             </p>
           </div>
         )}
 
-        {/* TAB 2: CATEGORIES TAB */}
+        {/* CATEGORIES TAB */}
         {activeTab === "categories" && (
           <div>
             <div className="panel-card">
@@ -294,18 +347,21 @@ function Dashboard() {
                       onChange={(e) => setCatName(e.target.value)}
                     />
                   </div>
+
+                  {/* 👈 FILE UPLOAD INPUT */}
                   <div className="admin-input-group">
-                    <label>Image URL</label>
+                    <label>Upload Category Image File</label>
                     <input
-                      type="text"
+                      type="file"
+                      accept="image/*"
                       required
-                      placeholder="https://..."
-                      value={catImage}
-                      onChange={(e) => setCatImage(e.target.value)}
+                      onChange={(e) => setCatImageFile(e.target.files[0])}
                     />
                   </div>
                 </div>
-                <button type="submit" className="submit-btn">Add Category</button>
+                <button type="submit" className="submit-btn" disabled={catUploading}>
+                  {catUploading ? "Uploading & Saving..." : "Add Category"}
+                </button>
               </form>
             </div>
 
@@ -329,6 +385,14 @@ function Dashboard() {
                       <td><strong>{c.name}</strong></td>
                       <td>{c.count || 0} Items</td>
                       <td>
+                        {/* 👈 CATEGORY EDIT BUTTON */}
+                        <button
+                          className="action-btn edit"
+                          onClick={() => setEditingCategory(c)}
+                          title="Edit Category"
+                        >
+                          <FaEdit />
+                        </button>
                         <button
                           className="action-btn delete"
                           onClick={() => handleDeleteCategory(c._id)}
@@ -345,7 +409,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* TAB 3: PRODUCTS TAB */}
+        {/* PRODUCTS TAB */}
         {activeTab === "products" && (
           <div>
             <div className="panel-card">
@@ -400,14 +464,14 @@ function Dashboard() {
                   </div>
                 </div>
 
+                {/* 👈 FILE UPLOAD INPUT */}
                 <div className="admin-input-group">
-                  <label>Product Image URL</label>
+                  <label>Upload Product Image File</label>
                   <input
-                    type="text"
+                    type="file"
+                    accept="image/*"
                     required
-                    placeholder="https://..."
-                    value={prodImage}
-                    onChange={(e) => setProdImage(e.target.value)}
+                    onChange={(e) => setProdImageFile(e.target.files[0])}
                   />
                 </div>
 
@@ -421,7 +485,9 @@ function Dashboard() {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="submit-btn">Add Product</button>
+                <button type="submit" className="submit-btn" disabled={prodUploading}>
+                  {prodUploading ? "Uploading & Saving..." : "Add Product"}
+                </button>
               </form>
             </div>
 
@@ -451,7 +517,7 @@ function Dashboard() {
                       <td>
                         <button
                           className="action-btn edit"
-                          onClick={() => handleEditClick(p)}
+                          onClick={() => setEditingProduct(p)}
                           title="Edit Product"
                         >
                           <FaEdit />
@@ -472,7 +538,41 @@ function Dashboard() {
           </div>
         )}
 
-        {/* EDIT PRODUCT MODAL POPUP */}
+        {/* EDIT CATEGORY MODAL */}
+        {editingCategory && (
+          <div className="modal-overlay">
+            <div className="modal-card">
+              <h2>Edit Category Details</h2>
+              <form onSubmit={handleUpdateCategorySubmit}>
+                <div className="admin-input-group">
+                  <label>Category Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingCategory.name}
+                    onChange={(e) => setEditingCategory({ ...editingCategory, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="admin-input-group">
+                  <label>Change Image (Optional File Select)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEditingCategory({ ...editingCategory, newFile: e.target.files[0] })}
+                  />
+                </div>
+
+                <div className="modal-actions">
+                  <button type="submit" className="submit-btn">Save Changes</button>
+                  <button type="button" className="cancel-btn" onClick={() => setEditingCategory(null)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT PRODUCT MODAL */}
         {editingProduct && (
           <div className="modal-overlay">
             <div className="modal-card">
@@ -511,24 +611,17 @@ function Dashboard() {
                 </div>
 
                 <div className="admin-input-group">
-                  <label>Image URL</label>
+                  <label>Change Image (Optional File Select)</label>
                   <input
-                    type="text"
-                    required
-                    value={editingProduct.image}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEditingProduct({ ...editingProduct, newFile: e.target.files[0] })}
                   />
                 </div>
 
                 <div className="modal-actions">
                   <button type="submit" className="submit-btn">Save Changes</button>
-                  <button
-                    type="button"
-                    className="cancel-btn"
-                    onClick={() => setEditingProduct(null)}
-                  >
-                    Cancel
-                  </button>
+                  <button type="button" className="cancel-btn" onClick={() => setEditingProduct(null)}>Cancel</button>
                 </div>
               </form>
             </div>
