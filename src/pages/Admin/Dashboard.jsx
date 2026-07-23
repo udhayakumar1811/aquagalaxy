@@ -157,13 +157,14 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT (STRICT CATEGORY VALIDATION 🚀)
+  // 2. ADD PRODUCT (FIXED CATEGORY SELECTION 🚀)
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    if (!prodCategory || prodCategory === "") {
-      alert("⚠️ Please select a valid Category from dropdown!");
+    // Strict validation to avoid N/A category creation
+    if (!prodCategory || prodCategory.trim() === "") {
+      alert("⚠️ Please select a Category from the dropdown!");
       return;
     }
 
@@ -176,17 +177,19 @@ function Dashboard() {
       setProdUploading(true);
       const imagePath = await uploadFileHandler(prodImageFile);
 
+      const payload = {
+        category_id: prodCategory,
+        name: prodName,
+        price: Number(prodPrice),
+        qnt: Number(prodQnt),
+        image: imagePath,
+        desc: prodDesc,
+      };
+
       const res = await fetch(`${API_URL}/api/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category_id: prodCategory,
-          name: prodName,
-          price: Number(prodPrice),
-          qnt: Number(prodQnt),
-          image: imagePath,
-          desc: prodDesc,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -199,7 +202,8 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        fetchData();
+        // Instantly refetch all products with populated categories
+        fetchData(); 
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
@@ -225,7 +229,7 @@ function Dashboard() {
       const catId = editingProduct.category_id?._id || editingProduct.category_id;
 
       if (!catId) {
-        alert("Please select a category");
+        alert("Please select a valid category");
         return;
       }
 
@@ -345,7 +349,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* OVERVIEW */}
+        {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="panel-card">
             <h2>Recent Activity & Inventory Summary</h2>
@@ -439,19 +443,23 @@ function Dashboard() {
               <h2>Add New Product</h2>
               <form onSubmit={handleAddProduct}>
                 <div className="form-grid-2">
+                  {/* CATEGORY SELECT DROPDOWN FIX 🚀 */}
                   <div className="admin-input-group">
-                    <label>Select Category</label>
+                    <label>Select Category (Required)</label>
                     <select
                       required
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
-                      <option value="">-- Choose Category (Required) --</option>
+                      <option value="">-- Choose Category --</option>
                       {categories.map((c) => (
-                        <option key={c._id} value={c._id}>{c.name}</option>
+                        <option key={c._id} value={c._id}>
+                          {c.name}
+                        </option>
                       ))}
                     </select>
                   </div>
+
                   <div className="admin-input-group">
                     <label>Product Name</label>
                     <input
@@ -535,7 +543,12 @@ function Dashboard() {
                       <td><strong>{p.name}</strong></td>
                       <td>₹{p.price}</td>
                       <td>{p.qnt}</td>
-                      <td>{p.category_id?.name || "N/A"}</td>
+                      <td>
+                        {/* Dynamic category name resolution */}
+                        {typeof p.category_id === "object" && p.category_id !== null
+                          ? p.category_id.name
+                          : categories.find((c) => c._id === p.category_id)?.name || "N/A"}
+                      </td>
                       <td>
                         <button
                           className="action-btn edit"
