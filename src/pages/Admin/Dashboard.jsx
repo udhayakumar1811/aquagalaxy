@@ -23,12 +23,12 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
-  // Category State
+  // Category Form State
   const [catName, setCatName] = useState("");
   const [catImageFile, setCatImageFile] = useState(null);
   const [catUploading, setCatUploading] = useState(false);
 
-  // Product State
+  // Product Form State
   const [prodName, setProdName] = useState("");
   const [prodCategory, setProdCategory] = useState("");
   const [prodPrice, setProdPrice] = useState("");
@@ -37,7 +37,7 @@ function Dashboard() {
   const [prodDesc, setProdDesc] = useState("");
   const [prodUploading, setProdUploading] = useState(false);
 
-  // Edit Modals
+  // Edit Modals State
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
 
@@ -108,7 +108,7 @@ function Dashboard() {
     }
   };
 
-  // EDIT CATEGORY SUBMIT (FIXED 🚀)
+  // EDIT CATEGORY SUBMIT
   const handleUpdateCategorySubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -198,7 +198,7 @@ function Dashboard() {
     }
   };
 
-  // EDIT PRODUCT SUBMIT (FIXED 🚀)
+  // EDIT PRODUCT SUBMIT (WITH CATEGORY ID PARSING 🚀)
   const handleUpdateProductSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -210,6 +210,7 @@ function Dashboard() {
         imagePath = await uploadFileHandler(editingProduct.newFile);
       }
 
+      // Exact Category ID extraction
       const catId = editingProduct.category_id?._id || editingProduct.category_id;
 
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
@@ -577,12 +578,28 @@ function Dashboard() {
           </div>
         )}
 
-        {/* EDIT PRODUCT MODAL */}
+        {/* EDIT PRODUCT MODAL (ADDED CATEGORY SELECT DROPDOWN 🚀) */}
         {editingProduct && (
           <div className="modal-overlay">
             <div className="modal-card">
               <h2>Edit Product Details</h2>
               <form onSubmit={handleUpdateProductSubmit}>
+                <div className="admin-input-group">
+                  <label>Select Category</label>
+                  <select
+                    required
+                    value={editingProduct.category_id?._id || editingProduct.category_id || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, category_id: e.target.value })}
+                  >
+                    <option value="">-- Choose Category --</option>
+                    {categories.map((c) => (
+                      <option key={c._id} value={c._id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 <div className="admin-input-group">
                   <label>Product Name</label>
                   <input
