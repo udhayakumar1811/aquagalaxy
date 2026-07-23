@@ -5,8 +5,9 @@ import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/shop";
 import Product from "./pages/Product/Product";
 import Cart from "./pages/Cart/Cart";
-import Login from "./pages/Auth/Login";   // 👈 Import Login
-import Signup from "./pages/Auth/Signup"; // 👈 Import Signup
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
+import Dashboard from "./pages/Admin/Dashboard"; // 👈 Import Dashboard
 
 function App() {
   return (
@@ -15,8 +16,9 @@ function App() {
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:id" element={<Product />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/login" element={<Login />} />   {/* 👈 Auth Route */}
-      <Route path="/signup" element={<Signup />} /> {/* 👈 Auth Route */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/admin" element={<Dashboard />} /> {/* 👈 Add Admin Dashboard Route */}
     </Routes>
   );
 }
