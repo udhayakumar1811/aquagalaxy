@@ -52,13 +52,6 @@ function Dashboard() {
 
       setCategories(catData);
       setProducts(prodData);
-
-      // AUTO-SET FIRST CATEGORY ID BULLETPROOF FIX 🚀
-      if (catData && catData.length > 0) {
-        const firstCatId = catData[0]._id || catData[0].id;
-        setProdCategory(firstCatId);
-      }
-
       setLoading(false);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
@@ -166,17 +159,19 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT (FIXED STRICT CATEGORY MAPPING 🚀)
+  // 2. ADD PRODUCT (DIRECT CATEGORY RESOLUTION FIX 🚀)
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    // Fallback logic for category ID
-    const firstAvailableCatId = categories.length > 0 ? (categories[0]._id || categories[0].id) : "";
-    const selectedCat = prodCategory || firstAvailableCatId;
+    // If user didn't touch select, auto pick 1st Category ID
+    let finalCatId = prodCategory;
+    if (!finalCatId && categories.length > 0) {
+      finalCatId = categories[0]._id || categories[0].id;
+    }
 
-    if (!selectedCat) {
-      alert("⚠️ Please select or create a category first!");
+    if (!finalCatId) {
+      alert("⚠️ Please select a valid Category!");
       return;
     }
 
@@ -193,7 +188,7 @@ function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          category_id: selectedCat,
+          category_id: finalCatId,
           name: prodName,
           price: Number(prodPrice),
           qnt: Number(prodQnt),
@@ -211,6 +206,7 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
+        setProdCategory("");
         fetchData();
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
@@ -276,16 +272,13 @@ function Dashboard() {
     }
   };
 
-  // HELPER: RENDER CATEGORY NAME DYNAMICALLY 🚀
+  // HELPER: RENDER CATEGORY NAME SAFELY 🚀
   const renderCategoryName = (p) => {
-    // 1. Direct populated object check
     if (p.category_id && typeof p.category_id === "object" && p.category_id.name) {
       return p.category_id.name;
     }
-    // 2. ID lookup in categories list
-    const found = categories.find(
-      (c) => String(c._id || c.id) === String(p.category_id?._id || p.category_id?.id || p.category_id)
-    );
+    const catIdStr = String(p.category_id?._id || p.category_id?.id || p.category_id);
+    const found = categories.find((c) => String(c._id || c.id) === catIdStr);
     return found ? found.name : "N/A";
   };
 
@@ -466,6 +459,7 @@ function Dashboard() {
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
+                      <option value="">-- Choose Category --</option>
                       {categories.map((c) => (
                         <option key={c._id || c.id} value={c._id || c.id}>
                           {c.name}
