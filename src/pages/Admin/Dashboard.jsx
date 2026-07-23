@@ -53,9 +53,9 @@ function Dashboard() {
       setCategories(catData);
       setProducts(prodData);
 
-      // Auto-set first category in state if available
-      if (catData.length > 0 && !prodCategory) {
-        setProdCategory(catData[0]._id);
+      // AUTO-SET FIRST CATEGORY IN STATE 🚀 (Fixes Unselected Dropdown bug)
+      if (catData && catData.length > 0) {
+        setProdCategory((prev) => prev || catData[0]._id);
       }
 
       setLoading(false);
@@ -168,9 +168,10 @@ function Dashboard() {
     e.preventDefault();
     setMessage("");
 
-    const selectedCatId = prodCategory || (categories.length > 0 ? categories[0]._id : "");
+    // Fallback ID if prodCategory state is still empty
+    const selectedCat = prodCategory || (categories.length > 0 ? categories[0]._id : "");
 
-    if (!selectedCatId) {
+    if (!selectedCat) {
       alert("⚠️ Please select or create a category first!");
       return;
     }
@@ -188,7 +189,7 @@ function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          category_id: selectedCatId,
+          category_id: selectedCat,
           name: prodName,
           price: Number(prodPrice),
           qnt: Number(prodQnt),
@@ -206,7 +207,7 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        fetchData();
+        fetchData(); // Refetch updated items
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
@@ -271,12 +272,12 @@ function Dashboard() {
     }
   };
 
-  // HELPER: DISPLAY CATEGORY NAME SAFELY
-  const renderCategoryName = (product) => {
-    if (product.category_id && typeof product.category_id === "object" && product.category_id.name) {
-      return product.category_id.name;
+  // HELPER: RENDER CATEGORY NAME DYNAMICALLY 🚀
+  const renderCategoryName = (p) => {
+    if (p.category_id && typeof p.category_id === "object" && p.category_id.name) {
+      return p.category_id.name;
     }
-    const found = categories.find((c) => String(c._id) === String(product.category_id));
+    const found = categories.find((c) => String(c._id) === String(p.category_id));
     return found ? found.name : "N/A";
   };
 
