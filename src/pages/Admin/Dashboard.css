@@ -210,3 +210,73 @@
   font-size: 14px;
   color: #334155;
 }
+
+/* ACTION BUTTONS */
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+.action-btn.edit {
+  color: #0284c7;
+  background-color: #e0f2fe;
+}
+
+.action-btn.delete {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.action-btn:hover {
+  opacity: 0.8;
+}
+
+/* EDIT MODAL POPUP */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-card h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: #475569;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}

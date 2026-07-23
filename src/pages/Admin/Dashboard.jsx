@@ -7,7 +7,9 @@ import {
   FaShoppingCart, 
   FaUsers, 
   FaCog, 
-  FaSignOutAlt 
+  FaSignOutAlt,
+  FaEdit,
+  FaTrash
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
@@ -33,6 +35,9 @@ function Dashboard() {
   const [prodImage, setProdImage] = useState("");
   const [prodDesc, setProdDesc] = useState("");
 
+  // Edit Modal State
+  const [editingProduct, setEditingProduct] = useState(null);
+
   const fetchData = async () => {
     try {
       const [resCat, resProd] = await Promise.all([
@@ -55,7 +60,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // ADD CATEGORY
+  // 1. ADD / UPDATE CATEGORY
   const handleAddCategory = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -78,7 +83,27 @@ function Dashboard() {
     }
   };
 
-  // ADD PRODUCT
+  // DELETE CATEGORY
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/category/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setMessage("🗑️ Category Deleted!");
+        fetchData();
+      } else {
+        setMessage("❌ Failed to delete category");
+      }
+    } catch (err) {
+      setMessage("❌ Server error while deleting category");
+    }
+  };
+
+  // 2. ADD PRODUCT
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -109,6 +134,60 @@ function Dashboard() {
       }
     } catch (err) {
       setMessage("❌ Error adding product");
+    }
+  };
+
+  // DELETE PRODUCT
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/products/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setMessage("🗑️ Product Deleted!");
+        fetchData();
+      } else {
+        setMessage("❌ Failed to delete product");
+      }
+    } catch (err) {
+      setMessage("❌ Server error while deleting product");
+    }
+  };
+
+  // EDIT PRODUCT MODAL OPEN
+  const handleEditClick = (product) => {
+    setEditingProduct(product);
+  };
+
+  // UPDATE PRODUCT SUBMIT
+  const handleUpdateProductSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category_id: editingProduct.category_id?._id || editingProduct.category_id,
+          name: editingProduct.name,
+          price: Number(editingProduct.price),
+          qnt: Number(editingProduct.qnt),
+          image: editingProduct.image,
+          desc: editingProduct.desc,
+        }),
+      });
+
+      if (res.ok) {
+        setMessage("✏️ Product Updated Successfully!");
+        setEditingProduct(null);
+        fetchData();
+      } else {
+        setMessage("❌ Failed to update product");
+      }
+    } catch (err) {
+      setMessage("❌ Error updating product");
     }
   };
 
@@ -237,7 +316,8 @@ function Dashboard() {
                   <tr>
                     <th>Image</th>
                     <th>Category Name</th>
-                    <th>Total Products Count</th>
+                    <th>Total Items</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -248,6 +328,15 @@ function Dashboard() {
                       </td>
                       <td><strong>{c.name}</strong></td>
                       <td>{c.count || 0} Items</td>
+                      <td>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => handleDeleteCategory(c._id)}
+                          title="Delete Category"
+                        >
+                          <FaTrash />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -346,6 +435,7 @@ function Dashboard() {
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Category</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -358,10 +448,89 @@ function Dashboard() {
                       <td>₹{p.price}</td>
                       <td>{p.qnt}</td>
                       <td>{p.category_id?.name || "N/A"}</td>
+                      <td>
+                        <button
+                          className="action-btn edit"
+                          onClick={() => handleEditClick(p)}
+                          title="Edit Product"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => handleDeleteProduct(p._id)}
+                          title="Delete Product"
+                        >
+                          <FaTrash />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT PRODUCT MODAL POPUP */}
+        {editingProduct && (
+          <div className="modal-overlay">
+            <div className="modal-card">
+              <h2>Edit Product Details</h2>
+              <form onSubmit={handleUpdateProductSubmit}>
+                <div className="admin-input-group">
+                  <label>Product Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.name}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-grid-2">
+                  <div className="admin-input-group">
+                    <label>Price (₹)</label>
+                    <input
+                      type="number"
+                      required
+                      value={editingProduct.price}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="admin-input-group">
+                    <label>Stock Quantity</label>
+                    <input
+                      type="number"
+                      required
+                      value={editingProduct.qnt}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, qnt: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-input-group">
+                  <label>Image URL</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.image}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
+                  />
+                </div>
+
+                <div className="modal-actions">
+                  <button type="submit" className="submit-btn">Save Changes</button>
+                  <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={() => setEditingProduct(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
