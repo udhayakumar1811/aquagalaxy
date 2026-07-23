@@ -52,6 +52,12 @@ function Dashboard() {
 
       setCategories(catData);
       setProducts(prodData);
+
+      // Auto-set first category in state if available
+      if (catData.length > 0 && !prodCategory) {
+        setProdCategory(catData[0]._id);
+      }
+
       setLoading(false);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
@@ -157,19 +163,20 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT (FIXED CATEGORY SELECTION 🚀)
+  // 2. ADD PRODUCT
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    // Strict validation to avoid N/A category creation
-    if (!prodCategory || prodCategory.trim() === "") {
-      alert("⚠️ Please select a Category from the dropdown!");
+    const selectedCatId = prodCategory || (categories.length > 0 ? categories[0]._id : "");
+
+    if (!selectedCatId) {
+      alert("⚠️ Please select or create a category first!");
       return;
     }
 
     if (!prodImageFile) {
-      alert("⚠️ Please upload a Product Image File!");
+      alert("⚠️ Please select a product image file!");
       return;
     }
 
@@ -177,19 +184,17 @@ function Dashboard() {
       setProdUploading(true);
       const imagePath = await uploadFileHandler(prodImageFile);
 
-      const payload = {
-        category_id: prodCategory,
-        name: prodName,
-        price: Number(prodPrice),
-        qnt: Number(prodQnt),
-        image: imagePath,
-        desc: prodDesc,
-      };
-
       const res = await fetch(`${API_URL}/api/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          category_id: selectedCatId,
+          name: prodName,
+          price: Number(prodPrice),
+          qnt: Number(prodQnt),
+          image: imagePath,
+          desc: prodDesc,
+        }),
       });
 
       const data = await res.json();
@@ -197,13 +202,11 @@ function Dashboard() {
       if (res.ok) {
         setMessage("✅ Product Added Successfully!");
         setProdName("");
-        setProdCategory("");
         setProdPrice("");
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        // Instantly refetch all products with populated categories
-        fetchData(); 
+        fetchData();
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
@@ -227,11 +230,6 @@ function Dashboard() {
       }
 
       const catId = editingProduct.category_id?._id || editingProduct.category_id;
-
-      if (!catId) {
-        alert("Please select a valid category");
-        return;
-      }
 
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
         method: "PUT",
@@ -271,6 +269,15 @@ function Dashboard() {
     } catch (err) {
       setMessage("❌ Error deleting product");
     }
+  };
+
+  // HELPER: DISPLAY CATEGORY NAME SAFELY
+  const renderCategoryName = (product) => {
+    if (product.category_id && typeof product.category_id === "object" && product.category_id.name) {
+      return product.category_id.name;
+    }
+    const found = categories.find((c) => String(c._id) === String(product.category_id));
+    return found ? found.name : "N/A";
   };
 
   const handleLogout = () => {
@@ -349,7 +356,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* OVERVIEW TAB */}
+        {/* OVERVIEW */}
         {activeTab === "overview" && (
           <div className="panel-card">
             <h2>Recent Activity & Inventory Summary</h2>
@@ -443,15 +450,13 @@ function Dashboard() {
               <h2>Add New Product</h2>
               <form onSubmit={handleAddProduct}>
                 <div className="form-grid-2">
-                  {/* CATEGORY SELECT DROPDOWN FIX 🚀 */}
                   <div className="admin-input-group">
-                    <label>Select Category (Required)</label>
+                    <label>Select Category</label>
                     <select
                       required
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
-                      <option value="">-- Choose Category --</option>
                       {categories.map((c) => (
                         <option key={c._id} value={c._id}>
                           {c.name}
@@ -543,12 +548,7 @@ function Dashboard() {
                       <td><strong>{p.name}</strong></td>
                       <td>₹{p.price}</td>
                       <td>{p.qnt}</td>
-                      <td>
-                        {/* Dynamic category name resolution */}
-                        {typeof p.category_id === "object" && p.category_id !== null
-                          ? p.category_id.name
-                          : categories.find((c) => c._id === p.category_id)?.name || "N/A"}
-                      </td>
+                      <td><strong>{renderCategoryName(p)}</strong></td>
                       <td>
                         <button
                           className="action-btn edit"
