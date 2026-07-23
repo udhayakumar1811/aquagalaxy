@@ -1,11 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Navbar.css";
-import { FaSearch, FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { CartContext } from "../../context/CartContext"; // 👈 Import Context
+import { FaSearch, FaHeart, FaShoppingCart, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
+import { CartContext } from "../../context/CartContext";
 
 function Navbar() {
-  const { totalItems } = useContext(CartContext); // 👈 Get totalItems
+  const { cart } = useContext(CartContext);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login");
+  };
 
   return (
     <nav className="navbar">
@@ -25,15 +40,32 @@ function Navbar() {
           <NavLink to="/search" className="icon-link"><FaSearch /></NavLink>
           <NavLink to="/wishlist" className="icon-link"><FaHeart /></NavLink>
           
-          {/* Dynamic Cart Icon with Badge */}
           <NavLink to="/cart" className="icon-link" style={{ position: "relative" }}>
             <FaShoppingCart />
-            {totalItems > 0 && (
-              <span className="cart-badge">{totalItems}</span>
+            {cart.length > 0 && (
+              <span className="cart-badge">{cart.length}</span>
             )}
           </NavLink>
 
-          <NavLink to="/profile" className="icon-link"><FaUser /></NavLink>
+          {/* User Logged In Check */}
+          {user ? (
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ fontSize: "14px", fontWeight: "bold", color: "#ff6b00" }}>
+                Hi, {user.name.split(" ")[0]}
+              </span>
+              <button
+                onClick={handleLogout}
+                title="Logout"
+                style={{ background: "none", border: "none", cursor: "pointer", color: "#222" }}
+              >
+                <FaSignOutAlt />
+              </button>
+            </div>
+          ) : (
+            <NavLink to="/login" className="icon-link" title="Login">
+              <FaUser />
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>

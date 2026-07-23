@@ -1,11 +1,12 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// PAGES IMPORT
 import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/shop";
 import Product from "./pages/Product/Product";
-import Cart from "./pages/Cart/Cart"; // 👈 Import Cart Page
+import Cart from "./pages/Cart/Cart";
+import Login from "./pages/Auth/Login";   // 👈 Import Login
+import Signup from "./pages/Auth/Signup"; // 👈 Import Signup
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:id" element={<Product />} />
-      <Route path="/cart" element={<Cart />} /> {/* 👈 Add Cart Route */}
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/login" element={<Login />} />   {/* 👈 Auth Route */}
+      <Route path="/signup" element={<Signup />} /> {/* 👈 Auth Route */}
     </Routes>
   );
 }
