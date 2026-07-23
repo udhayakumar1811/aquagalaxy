@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
 import { API_URL, getImageUrl } from "../../config";
+import { 
+  FaTachometerAlt, 
+  FaBoxOpen, 
+  FaTags, 
+  FaShoppingCart, 
+  FaUsers, 
+  FaCog, 
+  FaSignOutAlt 
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 function Dashboard() {
+  const [activeTab, setActiveTab] = useState("overview");
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   // Category Form State
   const [catName, setCatName] = useState("");
@@ -21,9 +33,6 @@ function Dashboard() {
   const [prodImage, setProdImage] = useState("");
   const [prodDesc, setProdDesc] = useState("");
 
-  const [message, setMessage] = useState("");
-
-  // Fetch Categories & Products Data
   const fetchData = async () => {
     try {
       const [resCat, resProd] = await Promise.all([
@@ -37,7 +46,7 @@ function Dashboard() {
       setProducts(prodData);
       setLoading(false);
     } catch (err) {
-      console.error("Error fetching admin data:", err);
+      console.error("Error loading dashboard data:", err);
       setLoading(false);
     }
   };
@@ -46,7 +55,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  // 1. ADD CATEGORY HANDLER
+  // ADD CATEGORY
   const handleAddCategory = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -59,19 +68,17 @@ function Dashboard() {
       });
 
       if (res.ok) {
-        setMessage("✅ Category added successfully!");
+        setMessage("✅ Category Created Successfully!");
         setCatName("");
         setCatImage("");
-        fetchData(); // Refresh list
-      } else {
-        setMessage("❌ Failed to add category");
+        fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error connecting to server");
+      setMessage("❌ Error adding category");
     }
   };
 
-  // 2. ADD PRODUCT HANDLER
+  // ADD PRODUCT
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -91,180 +98,275 @@ function Dashboard() {
       });
 
       if (res.ok) {
-        setMessage("✅ Product added successfully!");
+        setMessage("✅ Product Added Successfully!");
         setProdName("");
         setProdCategory("");
         setProdPrice("");
         setProdQnt("");
         setProdImage("");
         setProdDesc("");
-        fetchData(); // Refresh list
-      } else {
-        setMessage("❌ Failed to add product");
+        fetchData();
       }
     } catch (err) {
-      setMessage("❌ Error connecting to server");
+      setMessage("❌ Error adding product");
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
-    <>
-      <Navbar />
-      <div className="dashboard-container">
-        <h1 className="dashboard-title">Admin Dashboard 🛠️</h1>
+    <div className="admin-layout">
+      {/* SIDEBAR NAVIGATION */}
+      <aside className="admin-sidebar">
+        <div className="sidebar-brand">Aquafy Admin</div>
+        <ul className="sidebar-menu">
+          <li
+            className={`sidebar-item ${activeTab === "overview" ? "active" : ""}`}
+            onClick={() => setActiveTab("overview")}
+          >
+            <FaTachometerAlt /> Dashboard
+          </li>
+          <li
+            className={`sidebar-item ${activeTab === "products" ? "active" : ""}`}
+            onClick={() => setActiveTab("products")}
+          >
+            <FaBoxOpen /> Products
+          </li>
+          <li
+            className={`sidebar-item ${activeTab === "categories" ? "active" : ""}`}
+            onClick={() => setActiveTab("categories")}
+          >
+            <FaTags /> Categories
+          </li>
+          <li className="sidebar-item" onClick={() => alert("Orders feature coming soon!")}>
+            <FaShoppingCart /> Orders
+          </li>
+          <li className="sidebar-item" onClick={() => alert("Customers feature coming soon!")}>
+            <FaUsers /> Customers
+          </li>
+          <li className="sidebar-item" onClick={() => alert("Settings feature coming soon!")}>
+            <FaCog /> Settings
+          </li>
+          <li className="sidebar-item logout" onClick={handleLogout}>
+            <FaSignOutAlt /> Logout
+          </li>
+        </ul>
+      </aside>
 
-        {message && <div className="admin-alert">{message}</div>}
+      {/* MAIN DASHBOARD PANEL */}
+      <main className="admin-main-content">
+        <div className="dashboard-header">
+          <h1>Dashboard Overview</h1>
+        </div>
 
-        <div className="admin-grid">
-          {/* FORM 1: ADD CATEGORY */}
-          <div className="admin-card">
-            <h2>Add New Category</h2>
-            <form onSubmit={handleAddCategory}>
-              <div className="form-group">
-                <label>Category Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Betta Fish, Live Feed"
-                  value={catName}
-                  onChange={(e) => setCatName(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Category Image URL</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="https://..."
-                  value={catImage}
-                  onChange={(e) => setCatImage(e.target.value)}
-                />
-              </div>
-
-              <button type="submit" className="admin-btn">
-                Add Category
-              </button>
-            </form>
+        {/* TOP ANALYTICS STATS CARDS */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-title">Total Products</div>
+            <div className="stat-value">{products.length}</div>
           </div>
-
-          {/* FORM 2: ADD PRODUCT */}
-          <div className="admin-card">
-            <h2>Add New Product</h2>
-            <form onSubmit={handleAddProduct}>
-              <div className="form-group">
-                <label>Select Category</label>
-                <select
-                  required
-                  value={prodCategory}
-                  onChange={(e) => setProdCategory(e.target.value)}
-                >
-                  <option value="">-- Choose Category --</option>
-                  {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Product Name</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Halfmoon King Betta"
-                  value={prodName}
-                  onChange={(e) => setProdName(e.target.value)}
-                />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Price (₹)</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="350"
-                    value={prodPrice}
-                    onChange={(e) => setProdPrice(e.target.value)}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Quantity</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="10"
-                    value={prodQnt}
-                    onChange={(e) => setProdQnt(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Product Image URL</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="https://..."
-                  value={prodImage}
-                  onChange={(e) => setProdImage(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Description</label>
-                <textarea
-                  placeholder="Short description of the product..."
-                  value={prodDesc}
-                  onChange={(e) => setProdDesc(e.target.value)}
-                ></textarea>
-              </div>
-
-              <button type="submit" className="admin-btn">
-                Add Product
-              </button>
-            </form>
+          <div className="stat-card">
+            <div className="stat-title">Categories</div>
+            <div className="stat-value">{categories.length}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-title">Total Orders</div>
+            <div className="stat-value">340</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-title">Revenue</div>
+            <div className="stat-value" style={{ color: "#22c55e" }}>₹1,25,000</div>
           </div>
         </div>
 
-        {/* RECENT ADDED ITEMS LIST */}
-        <div className="admin-table-section">
-          <h2>Existing Products List ({products.length})</h2>
-          {loading ? (
-            <p>Loading items...</p>
-          ) : (
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((p) => (
-                  <tr key={p._id}>
-                    <td>
-                      <img src={getImageUrl(p.image)} alt={p.name} width="50" height="50" style={{ objectFit: "cover", borderRadius: "4px" }} />
-                    </td>
-                    <td>{p.name}</td>
-                    <td>₹{p.price}</td>
-                    <td>{p.qnt}</td>
-                    <td>{p.category_id?.name || "N/A"}</td>
+        {message && (
+          <div style={{ padding: "12px", background: "#dcfce7", color: "#166534", borderRadius: "8px", marginBottom: "20px" }}>
+            {message}
+          </div>
+        )}
+
+        {/* TAB 1: OVERVIEW TAB */}
+        {activeTab === "overview" && (
+          <div className="panel-card">
+            <h2>Recent Activity & Inventory Summary</h2>
+            <p style={{ color: "#64748b" }}>
+              Welcome back Admin! Select <strong>Categories</strong> or <strong>Products</strong> from the sidebar to manage store inventory.
+            </p>
+          </div>
+        )}
+
+        {/* TAB 2: CATEGORIES TAB */}
+        {activeTab === "categories" && (
+          <div>
+            <div className="panel-card">
+              <h2>Add New Category</h2>
+              <form onSubmit={handleAddCategory}>
+                <div className="form-grid-2">
+                  <div className="admin-input-group">
+                    <label>Category Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Betta Fish"
+                      value={catName}
+                      onChange={(e) => setCatName(e.target.value)}
+                    />
+                  </div>
+                  <div className="admin-input-group">
+                    <label>Image URL</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="https://..."
+                      value={catImage}
+                      onChange={(e) => setCatImage(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="submit-btn">Add Category</button>
+              </form>
+            </div>
+
+            <div className="panel-card">
+              <h2>Existing Categories ({categories.length})</h2>
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Category Name</th>
+                    <th>Total Products Count</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
-      <Footer />
-    </>
+                </thead>
+                <tbody>
+                  {categories.map((c) => (
+                    <tr key={c._id}>
+                      <td>
+                        <img src={getImageUrl(c.image)} alt={c.name} width="45" height="45" style={{ objectFit: "cover", borderRadius: "6px" }} />
+                      </td>
+                      <td><strong>{c.name}</strong></td>
+                      <td>{c.count || 0} Items</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: PRODUCTS TAB */}
+        {activeTab === "products" && (
+          <div>
+            <div className="panel-card">
+              <h2>Add New Product</h2>
+              <form onSubmit={handleAddProduct}>
+                <div className="form-grid-2">
+                  <div className="admin-input-group">
+                    <label>Select Category</label>
+                    <select
+                      required
+                      value={prodCategory}
+                      onChange={(e) => setProdCategory(e.target.value)}
+                    >
+                      <option value="">-- Select Category --</option>
+                      {categories.map((c) => (
+                        <option key={c._id} value={c._id}>{c.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="admin-input-group">
+                    <label>Product Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Halfmoon King Betta"
+                      value={prodName}
+                      onChange={(e) => setProdName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-grid-2">
+                  <div className="admin-input-group">
+                    <label>Price (₹)</label>
+                    <input
+                      type="number"
+                      required
+                      placeholder="350"
+                      value={prodPrice}
+                      onChange={(e) => setProdPrice(e.target.value)}
+                    />
+                  </div>
+                  <div className="admin-input-group">
+                    <label>Stock Quantity</label>
+                    <input
+                      type="number"
+                      required
+                      placeholder="10"
+                      value={prodQnt}
+                      onChange={(e) => setProdQnt(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-input-group">
+                  <label>Product Image URL</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="https://..."
+                    value={prodImage}
+                    onChange={(e) => setProdImage(e.target.value)}
+                  />
+                </div>
+
+                <div className="admin-input-group">
+                  <label>Description</label>
+                  <textarea
+                    rows="3"
+                    placeholder="Short product specs..."
+                    value={prodDesc}
+                    onChange={(e) => setProdDesc(e.target.value)}
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="submit-btn">Add Product</button>
+              </form>
+            </div>
+
+            <div className="panel-card">
+              <h2>All Products ({products.length})</h2>
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((p) => (
+                    <tr key={p._id}>
+                      <td>
+                        <img src={getImageUrl(p.image)} alt={p.name} width="45" height="45" style={{ objectFit: "cover", borderRadius: "6px" }} />
+                      </td>
+                      <td><strong>{p.name}</strong></td>
+                      <td>₹{p.price}</td>
+                      <td>{p.qnt}</td>
+                      <td>{p.category_id?.name || "N/A"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
 
