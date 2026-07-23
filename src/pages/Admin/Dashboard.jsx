@@ -52,13 +52,6 @@ function Dashboard() {
 
       setCategories(catData);
       setProducts(prodData);
-
-      // AUTO-SET FIRST CATEGORY ID 🚀 (Guarantees State is never empty!)
-      if (catData && catData.length > 0) {
-        const defaultCatId = catData[0]._id || catData[0].id;
-        setProdCategory(defaultCatId);
-      }
-
       setLoading(false);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
@@ -166,24 +159,18 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT (DIRECT CATEGORY RESOLUTION FIX 🚀)
+  // 2. ADD PRODUCT (STRICT DROPDOWN CHECK 🚀)
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    // Fallback: Pick 1st category ID if state is empty
-    let selectedCat = prodCategory;
-    if (!selectedCat && categories.length > 0) {
-      selectedCat = categories[0]._id || categories[0].id;
-    }
-
-    if (!selectedCat) {
-      alert("⚠️ Please select or create a category first!");
+    if (!prodCategory || prodCategory.trim() === "") {
+      alert("⚠️ Please select a Category from the dropdown!");
       return;
     }
 
     if (!prodImageFile) {
-      alert("⚠️ Please select a product image file!");
+      alert("⚠️ Please upload a Product Image File!");
       return;
     }
 
@@ -195,7 +182,7 @@ function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          category_id: selectedCat,
+          category_id: prodCategory,
           name: prodName,
           price: Number(prodPrice),
           qnt: Number(prodQnt),
@@ -209,16 +196,11 @@ function Dashboard() {
       if (res.ok) {
         setMessage("✅ Product Added Successfully!");
         setProdName("");
+        setProdCategory("");
         setProdPrice("");
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        
-        // Reset category state to 1st available category for next item
-        if (categories.length > 0) {
-          setProdCategory(categories[0]._id || categories[0].id);
-        }
-        
         fetchData();
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
@@ -276,7 +258,7 @@ function Dashboard() {
     try {
       const res = await fetch(`${API_URL}/api/products/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setMessage("🗑️ Product Deleted!");
+        setMessage("🗑️ Category Deleted!");
         fetchData();
       }
     } catch (err) {
@@ -464,13 +446,15 @@ function Dashboard() {
               <h2>Add New Product</h2>
               <form onSubmit={handleAddProduct}>
                 <div className="form-grid-2">
+                  {/* CATEGORY SELECT DROPDOWN FIX WITH PLACEHOLDER 🚀 */}
                   <div className="admin-input-group">
-                    <label>Select Category</label>
+                    <label>Select Category (Required)</label>
                     <select
                       required
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
+                      <option value="">-- Select Category --</option>
                       {categories.map((c) => (
                         <option key={c._id || c.id} value={c._id || c.id}>
                           {c.name}
