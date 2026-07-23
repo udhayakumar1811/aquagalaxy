@@ -52,6 +52,13 @@ function Dashboard() {
 
       setCategories(catData);
       setProducts(prodData);
+
+      // AUTO-SET FIRST CATEGORY ID 🚀 (Guarantees State is never empty!)
+      if (catData && catData.length > 0) {
+        const defaultCatId = catData[0]._id || catData[0].id;
+        setProdCategory(defaultCatId);
+      }
+
       setLoading(false);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
@@ -164,14 +171,14 @@ function Dashboard() {
     e.preventDefault();
     setMessage("");
 
-    // If user didn't touch select, auto pick 1st Category ID
-    let finalCatId = prodCategory;
-    if (!finalCatId && categories.length > 0) {
-      finalCatId = categories[0]._id || categories[0].id;
+    // Fallback: Pick 1st category ID if state is empty
+    let selectedCat = prodCategory;
+    if (!selectedCat && categories.length > 0) {
+      selectedCat = categories[0]._id || categories[0].id;
     }
 
-    if (!finalCatId) {
-      alert("⚠️ Please select a valid Category!");
+    if (!selectedCat) {
+      alert("⚠️ Please select or create a category first!");
       return;
     }
 
@@ -188,7 +195,7 @@ function Dashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          category_id: finalCatId,
+          category_id: selectedCat,
           name: prodName,
           price: Number(prodPrice),
           qnt: Number(prodQnt),
@@ -206,7 +213,12 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        setProdCategory("");
+        
+        // Reset category state to 1st available category for next item
+        if (categories.length > 0) {
+          setProdCategory(categories[0]._id || categories[0].id);
+        }
+        
         fetchData();
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
@@ -459,7 +471,6 @@ function Dashboard() {
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
-                      <option value="">-- Choose Category --</option>
                       {categories.map((c) => (
                         <option key={c._id || c.id} value={c._id || c.id}>
                           {c.name}
