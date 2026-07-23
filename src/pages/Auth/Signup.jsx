@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer"; // 👈 Fixed import here
+import Footer from "../../components/Footer/Footer"; // 👈 check Footer import
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
-import "./Auth.css";
+import "./Auth.css"; // 👈 CSS import
+
+
 
 function Signup() {
   const [name, setName] = useState("");
