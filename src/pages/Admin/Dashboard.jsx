@@ -53,9 +53,10 @@ function Dashboard() {
       setCategories(catData);
       setProducts(prodData);
 
-      // AUTO-SET FIRST CATEGORY IN STATE 🚀 (Fixes Unselected Dropdown bug)
+      // AUTO-SET FIRST CATEGORY ID BULLETPROOF FIX 🚀
       if (catData && catData.length > 0) {
-        setProdCategory((prev) => prev || catData[0]._id);
+        const firstCatId = catData[0]._id || catData[0].id;
+        setProdCategory(firstCatId);
       }
 
       setLoading(false);
@@ -126,7 +127,9 @@ function Dashboard() {
         imagePath = await uploadFileHandler(editingCategory.newFile);
       }
 
-      const res = await fetch(`${API_URL}/api/category/${editingCategory._id}`, {
+      const catId = editingCategory._id || editingCategory.id;
+
+      const res = await fetch(`${API_URL}/api/category/${catId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -163,13 +166,14 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT
+  // 2. ADD PRODUCT (FIXED STRICT CATEGORY MAPPING 🚀)
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    // Fallback ID if prodCategory state is still empty
-    const selectedCat = prodCategory || (categories.length > 0 ? categories[0]._id : "");
+    // Fallback logic for category ID
+    const firstAvailableCatId = categories.length > 0 ? (categories[0]._id || categories[0].id) : "";
+    const selectedCat = prodCategory || firstAvailableCatId;
 
     if (!selectedCat) {
       alert("⚠️ Please select or create a category first!");
@@ -207,7 +211,7 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        fetchData(); // Refetch updated items
+        fetchData();
       } else {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
@@ -230,9 +234,9 @@ function Dashboard() {
         imagePath = await uploadFileHandler(editingProduct.newFile);
       }
 
-      const catId = editingProduct.category_id?._id || editingProduct.category_id;
+      const catId = editingProduct.category_id?._id || editingProduct.category_id?.id || editingProduct.category_id;
 
-      const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
+      const res = await fetch(`${API_URL}/api/products/${editingProduct._id || editingProduct.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -274,10 +278,14 @@ function Dashboard() {
 
   // HELPER: RENDER CATEGORY NAME DYNAMICALLY 🚀
   const renderCategoryName = (p) => {
+    // 1. Direct populated object check
     if (p.category_id && typeof p.category_id === "object" && p.category_id.name) {
       return p.category_id.name;
     }
-    const found = categories.find((c) => String(c._id) === String(p.category_id));
+    // 2. ID lookup in categories list
+    const found = categories.find(
+      (c) => String(c._id || c.id) === String(p.category_id?._id || p.category_id?.id || p.category_id)
+    );
     return found ? found.name : "N/A";
   };
 
@@ -414,7 +422,7 @@ function Dashboard() {
                 </thead>
                 <tbody>
                   {categories.map((c) => (
-                    <tr key={c._id}>
+                    <tr key={c._id || c.id}>
                       <td>
                         <img src={getImageUrl(c.image)} alt={c.name} width="45" height="45" style={{ objectFit: "cover", borderRadius: "6px" }} />
                       </td>
@@ -430,7 +438,7 @@ function Dashboard() {
                         </button>
                         <button
                           className="action-btn delete"
-                          onClick={() => handleDeleteCategory(c._id)}
+                          onClick={() => handleDeleteCategory(c._id || c.id)}
                           title="Delete Category"
                         >
                           <FaTrash />
@@ -459,7 +467,7 @@ function Dashboard() {
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
                       {categories.map((c) => (
-                        <option key={c._id} value={c._id}>
+                        <option key={c._id || c.id} value={c._id || c.id}>
                           {c.name}
                         </option>
                       ))}
@@ -542,7 +550,7 @@ function Dashboard() {
                 </thead>
                 <tbody>
                   {products.map((p) => (
-                    <tr key={p._id}>
+                    <tr key={p._id || p.id}>
                       <td>
                         <img src={getImageUrl(p.image)} alt={p.name} width="45" height="45" style={{ objectFit: "cover", borderRadius: "6px" }} />
                       </td>
@@ -560,7 +568,7 @@ function Dashboard() {
                         </button>
                         <button
                           className="action-btn delete"
-                          onClick={() => handleDeleteProduct(p._id)}
+                          onClick={() => handleDeleteProduct(p._id || p.id)}
                           title="Delete Product"
                         >
                           <FaTrash />
@@ -618,12 +626,12 @@ function Dashboard() {
                   <label>Select Category</label>
                   <select
                     required
-                    value={editingProduct.category_id?._id || editingProduct.category_id || ""}
+                    value={editingProduct.category_id?._id || editingProduct.category_id?.id || editingProduct.category_id || ""}
                     onChange={(e) => setEditingProduct({ ...editingProduct, category_id: e.target.value })}
                   >
                     <option value="">-- Choose Category --</option>
                     {categories.map((c) => (
-                      <option key={c._id} value={c._id}>
+                      <option key={c._id || c.id} value={c._id || c.id}>
                         {c.name}
                       </option>
                     ))}
