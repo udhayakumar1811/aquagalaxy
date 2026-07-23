@@ -163,6 +163,7 @@ function Dashboard() {
     setMessage("");
 
     try {
+      if (!prodCategory) return alert("Please select a category");
       if (!prodImageFile) return alert("Please select a product image file");
 
       setProdUploading(true);
@@ -189,7 +190,7 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        fetchData();
+        fetchData(); // 🚀 Refetch list to get populated category names
       }
     } catch (err) {
       setMessage("❌ Error adding product");
@@ -198,7 +199,7 @@ function Dashboard() {
     }
   };
 
-  // EDIT PRODUCT SUBMIT (WITH CATEGORY ID PARSING 🚀)
+  // EDIT PRODUCT SUBMIT
   const handleUpdateProductSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -210,7 +211,6 @@ function Dashboard() {
         imagePath = await uploadFileHandler(editingProduct.newFile);
       }
 
-      // Exact Category ID extraction
       const catId = editingProduct.category_id?._id || editingProduct.category_id;
 
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
@@ -519,6 +519,7 @@ function Dashboard() {
                       <td><strong>{p.name}</strong></td>
                       <td>₹{p.price}</td>
                       <td>{p.qnt}</td>
+                      {/* Displays populated Category Name directly */}
                       <td>{p.category_id?.name || "N/A"}</td>
                       <td>
                         <button
@@ -578,7 +579,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* EDIT PRODUCT MODAL (ADDED CATEGORY SELECT DROPDOWN 🚀) */}
+        {/* EDIT PRODUCT MODAL */}
         {editingProduct && (
           <div className="modal-overlay">
             <div className="modal-card">
