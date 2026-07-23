@@ -157,15 +157,22 @@ function Dashboard() {
     }
   };
 
-  // 2. ADD PRODUCT
+  // 2. ADD PRODUCT (STRICT CATEGORY VALIDATION 🚀)
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
 
-    try {
-      if (!prodCategory) return alert("Please select a category");
-      if (!prodImageFile) return alert("Please select a product image file");
+    if (!prodCategory || prodCategory === "") {
+      alert("⚠️ Please select a valid Category from dropdown!");
+      return;
+    }
 
+    if (!prodImageFile) {
+      alert("⚠️ Please upload a Product Image File!");
+      return;
+    }
+
+    try {
       setProdUploading(true);
       const imagePath = await uploadFileHandler(prodImageFile);
 
@@ -182,6 +189,8 @@ function Dashboard() {
         }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setMessage("✅ Product Added Successfully!");
         setProdName("");
@@ -190,7 +199,9 @@ function Dashboard() {
         setProdQnt("");
         setProdImageFile(null);
         setProdDesc("");
-        fetchData(); // 🚀 Refetch list to get populated category names
+        fetchData();
+      } else {
+        setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
     } catch (err) {
       setMessage("❌ Error adding product");
@@ -212,6 +223,11 @@ function Dashboard() {
       }
 
       const catId = editingProduct.category_id?._id || editingProduct.category_id;
+
+      if (!catId) {
+        alert("Please select a category");
+        return;
+      }
 
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id}`, {
         method: "PUT",
@@ -430,7 +446,7 @@ function Dashboard() {
                       value={prodCategory}
                       onChange={(e) => setProdCategory(e.target.value)}
                     >
-                      <option value="">-- Select Category --</option>
+                      <option value="">-- Choose Category (Required) --</option>
                       {categories.map((c) => (
                         <option key={c._id} value={c._id}>{c.name}</option>
                       ))}
@@ -519,7 +535,6 @@ function Dashboard() {
                       <td><strong>{p.name}</strong></td>
                       <td>₹{p.price}</td>
                       <td>{p.qnt}</td>
-                      {/* Displays populated Category Name directly */}
                       <td>{p.category_id?.name || "N/A"}</td>
                       <td>
                         <button
