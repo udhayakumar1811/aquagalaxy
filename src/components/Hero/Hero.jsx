@@ -3,12 +3,11 @@ import "./Hero.css";
 function Hero() {
   return (
     <section className="hero">
-      <div className="hero-overlay"></div>
+      <div className="hero-overlay" aria-hidden="true"></div>
 
       <div className="hero-content">
         <h1>
-          Amazing <br />
-          Aquarium Collection
+          Amazing <span className="hero-title-break">Aquarium Collection</span>
         </h1>
 
         <p className="hero-description">
@@ -16,11 +15,11 @@ function Hero() {
           et dolore magna aliquyam erat, sed diam voluptua.
         </p>
 
-        <button className="hero-btn">
-          Shop Now &rarr;
+        <button type="button" className="hero-btn">
+          <span>Shop Now</span>
+          <span className="btn-arrow" aria-hidden="true">&rarr;</span>
         </button>
       </div>
-      
     </section>
   );
 }

@@ -11,17 +11,6 @@
     margin-bottom: 45px;
 }
 
-.title-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -70%);
-    font-size: 70px;
-    font-weight: 800;
-    color: rgba(255, 107, 0, 0.04);
-    white-space: nowrap;
-    user-select: none;
-}
 
 .title-main {
     font-size: 32px;

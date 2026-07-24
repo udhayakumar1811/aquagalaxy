@@ -1,23 +1,31 @@
 .hero {
     width: 100%;
+    /* Use dynamic viewport height (dvh) with fallback for older browsers */
     min-height: 100vh;
+    min-height: 100dvh;
     background-image: url("../../assets/images/heroBgImage.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
     
-    /* Centering system */
+    /* Centering System */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px; /* Safe padding prevents contents touching viewport borders on short heights */
+    padding: 60px 20px;
+    box-sizing: border-box;
 }
 
+/* Enhanced Gradient Overlay for Better Contrast & Depth */
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.25);
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.45) 0%,
+        rgba(0, 0, 0, 0.65) 100%
+    );
     z-index: 1;
 }
 
@@ -25,7 +33,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    color: #fff;
+    color: #ffffff;
     width: 100%;
     max-width: 800px; 
     display: flex;
@@ -36,88 +44,103 @@
 .hero-content h1 {
     font-size: 56px;
     font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
+    line-height: 1.15;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hero-title-break {
+    display: block;
 }
 
 .hero-description {
     width: 100%;
-    max-width: 550px; 
-    color: #ccc;
-    font-size: 14px;
+    max-width: 580px; 
+    color: rgba(255, 255, 255, 0.9); /* Slightly brighter for readable text over images */
+    font-size: 16px;
     line-height: 1.6;
-    margin-bottom: 30px;
+    margin: 0 0 32px 0;
     text-align: center;
 }
 
+/* Button & Interactive States */
 .hero-btn {
-    background: #ff6b00;
-    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #ff6b00;
+    color: #ffffff;
     border: none;
-    padding: 14px 35px;
-    border-radius: 5px;
+    padding: 16px 36px;
+    border-radius: 6px;
     font-size: 16px;
     font-weight: 600;
-    transition: all .3s ease;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+}
+
+.hero-btn .btn-arrow {
+    transition: transform 0.2s ease;
 }
 
 .hero-btn:hover {
-    background: #ff5500;
+    background-color: #ff5500;
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.45);
 }
 
+.hero-btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
 
-/* ==========================================
-   RESPONSIVE BREAKPOINTS (MOBILE FIRST DECAY)
-   ========================================== */
+.hero-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+}
 
-/* 1. Tablets / Small Desktops (e.g. iPads, small laptops) */
+.hero-btn:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+/* Responsive Styles */
 @media (max-width: 992px) {
     .hero-content h1 {
-        font-size: 46px; /* Smooth downscale to avoid layout stretching */
+        font-size: 44px;
     }
     .hero-description {
-        max-width: 500px;
-        font-size: 14px;
+        font-size: 15px;
     }
 }
 
-/* 2. Landscape Mobile / Large Mobile Devices */
 @media (max-width: 768px) {
     .hero {
-        min-height: 100vh; /* Keeps fullscreen impact on mobile */
-        padding-top: 80px;  /* Leaves space for potential mobile navbars */
-        padding-bottom: 80px;
+        padding: 80px 24px;
     }
     .hero-content h1 {
         font-size: 36px;
-        line-height: 1.25;
+    }
+    .hero-title-break {
+        display: inline; /* Allows text to flow naturally on mobile screens */
     }
     .hero-description {
-        font-size: 13px;
-        line-height: 1.5;
-        margin-bottom: 25px;
+        font-size: 14px;
+        margin-bottom: 28px;
     }
     .hero-btn {
-        padding: 12px 30px;
-        font-size: 15px;
-    }
-    .carousel-indicators-custom {
-        bottom: 20px; /* Slightly raises indicator panel out of extreme hardware margins */
+        padding: 14px 32px;
     }
 }
 
-/* 3. Small Mobile Devices (e.g., iPhone SE, older phones) */
 @media (max-width: 480px) {
     .hero-content h1 {
-        font-size: 30px; /* Strong downscale ensures title fits without single-letter word breaks */
-    }
-    .hero-description {
-        font-size: 13px;
+        font-size: 28px;
     }
     .hero-btn {
-        width: 100%; /* Makes button hit-target full-width for easier thumb clicking on tiny viewports */
-        max-width: 240px;
+        width: 100%;
+        max-width: 280px;
     }
 }

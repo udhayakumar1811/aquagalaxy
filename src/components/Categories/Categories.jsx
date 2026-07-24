@@ -28,7 +28,6 @@ function Categories() {
   return (
     <section className="categories">
       <div className="section-title-wrap">
-        <span className="title-bg">Categories</span>
         <h2 className="title-main">Categories</h2>
       </div>
 
