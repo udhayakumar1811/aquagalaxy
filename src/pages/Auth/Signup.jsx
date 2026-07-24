@@ -29,23 +29,19 @@ function Signup() {
       const data = await res.json();
 
       if (res.ok) {
-        // Save Token & User Info
+        // Token Save
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // ROLE BASED REDIRECT
-        if (data.user && data.user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/"); // Normal User goes to Home Page
-        }
+        // Redirect to Home Page
+        navigate("/");
         window.location.reload();
       } else {
         setErrorMsg(data.message || "Registration Failed!");
       }
     } catch (err) {
       console.error("Signup Error:", err);
-      setErrorMsg("Server Error! Please try again later.");
+      setErrorMsg("Server error! Check connection.");
     } finally {
       setLoading(false);
     }
@@ -55,7 +51,7 @@ function Signup() {
     <div className="auth-wrapper">
       <div className="auth-card">
         <h2 className="auth-title">Create an Account</h2>
-        <p className="auth-subtitle">Join Aquafy to explore aquatic pets</p>
+        <p className="auth-subtitle">Join Aquafy to buy amazing aquatic pets</p>
 
         {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
@@ -65,7 +61,7 @@ function Signup() {
             <input
               type="text"
               required
-              placeholder="Enter your full name"
+              placeholder="Enter full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
