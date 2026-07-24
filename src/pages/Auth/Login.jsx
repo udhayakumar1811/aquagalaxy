@@ -1,91 +1,94 @@
 import React, { useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
-import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
+import { useNavigate, Link } from "react-router-dom";
 import "./Auth.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorMsg("");
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      const res = await fetch(`${API_URL}/api/users/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
-      }
+      if (res.ok) {
+        // 1. Save Token & User in LocalStorage 🚀
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user || data));
 
-      // Save user & token in LocalStorage
-      localStorage.setItem("user", JSON.stringify(data));
-      
-      // Redirect to Shop or Home Page
-      navigate("/shop");
-      window.location.reload(); // Refresh to update Navbar State
+        // 2. Navigate to Home Page (/) instead of Shop
+        navigate("/");
+        window.location.reload(); // Refresh header/navbar state
+      } else {
+        setErrorMsg(data.message || "Invalid Email or Password!");
+      }
     } catch (err) {
-      setError(err.message);
+      console.error("Login Error:", err);
+      setErrorMsg("Server error! Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>Welcome Back 👋</h2>
-          {error && <div className="error-msg">{error}</div>}
+    <div className="login-container">
+      <div className="login-card">
+        <h2>Welcome Back to Aquafy</h2>
+        <p style={{ color: "#64748b", marginBottom: "20px" }}>
+          Login to your account to explore aquatic pets
+        </p>
 
-          <form onSubmit={handleLogin} className="auth-form">
-            <div className="form-group">
-              <label>Email Address</label>
-              <input
-                type="email"
-                required
-                placeholder="enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+        {errorMsg && <div className="error-alert">{errorMsg}</div>}
 
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                required
-                placeholder="enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+        <form onSubmit={handleLoginSubmit}>
+          <div className="input-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              required
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-            <button type="submit" className="auth-btn" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
-            </button>
-          </form>
+          <div className="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              required
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-          <p className="auth-switch">
-            Don't have an account? <Link to="/signup">Sign Up</Link>
-          </p>
-        </div>
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <p style={{ marginTop: "15px", fontSize: "14px" }}>
+          Don't have an account? <Link to="/signup">Register here</Link>
+        </p>
       </div>
-      <Footer />
-    </>
+    </div>
   );
 }
 
