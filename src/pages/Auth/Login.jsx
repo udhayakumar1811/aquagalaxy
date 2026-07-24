@@ -28,15 +28,15 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // Save Token & User Info
+        // Save Token & User in LocalStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // ROLE BASED ROUTING 🚀
+        // 🎯 MANUAL ROLE BASED REDIRECT:
         if (data.user && data.user.role === "admin") {
-          navigate("/admin"); // Admin goes to Dashboard
+          navigate("/admin"); // Compass-ல "admin"-ஆ மாத்தினா மட்டும் Dashboard போகும்
         } else {
-          navigate("/"); // Normal User goes to Home Page
+          navigate("/"); // Normal users Home Page-க்கு போவாங்க
         }
         window.location.reload();
       } else {
@@ -44,7 +44,7 @@ function Login() {
       }
     } catch (err) {
       console.error("Login Error:", err);
-      setErrorMsg("Server Error! Please try again.");
+      setErrorMsg("Server error! Please try again later.");
     } finally {
       setLoading(false);
     }
