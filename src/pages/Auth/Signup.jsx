@@ -1,104 +1,108 @@
 import React, { useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer"; // 👈 check Footer import
-import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../config";
-import "./Auth.css"; // 👈 CSS import
-
-
+import { useNavigate, Link } from "react-router-dom";
+import "./Auth.css";
 
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorMsg("");
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/auth/register`, {
+      const res = await fetch(`${API_URL}/api/users/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
+      if (res.ok) {
+        // Save Token & User Info
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // ROLE BASED REDIRECT
+        if (data.user && data.user.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/"); // Normal User goes to Home Page
+        }
+        window.location.reload();
+      } else {
+        setErrorMsg(data.message || "Registration Failed!");
       }
-
-      // Save user & token in LocalStorage
-      localStorage.setItem("user", JSON.stringify(data));
-
-      navigate("/shop");
-      window.location.reload();
     } catch (err) {
-      setError(err.message);
+      console.error("Signup Error:", err);
+      setErrorMsg("Server Error! Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>Create Account 🚀</h2>
-          {error && <div className="error-msg">{error}</div>}
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2 className="auth-title">Create an Account</h2>
+        <p className="auth-subtitle">Join Aquafy to explore aquatic pets</p>
 
-          <form onSubmit={handleSignup} className="auth-form">
-            <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                required
-                placeholder="enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
+        {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
-            <div className="form-group">
-              <label>Email Address</label>
-              <input
-                type="email"
-                required
-                placeholder="enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+        <form onSubmit={handleSignupSubmit} className="auth-form">
+          <div className="auth-input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              required
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                required
-                placeholder="create password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+          <div className="auth-input-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              required
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-            <button type="submit" className="auth-btn" disabled={loading}>
-              {loading ? "Creating..." : "Sign Up"}
-            </button>
-          </form>
+          <div className="auth-input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              required
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-          <p className="auth-switch">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </div>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Creating Account..." : "Sign Up"}
+          </button>
+        </form>
+
+        <p className="auth-footer-text">
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </div>
-      <Footer /> {/* 👈 Fixed JSX tag here */}
-    </>
+    </div>
   );
 }
 

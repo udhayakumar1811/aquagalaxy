@@ -30,17 +30,21 @@ function Login() {
       if (res.ok) {
         // Save Token & User Info
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user || data));
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Redirect to Home Page (/)
-        navigate("/");
-        window.location.reload(); 
+        // ROLE BASED ROUTING 🚀
+        if (data.user && data.user.role === "admin") {
+          navigate("/admin"); // Admin goes to Dashboard
+        } else {
+          navigate("/"); // Normal User goes to Home Page
+        }
+        window.location.reload();
       } else {
         setErrorMsg(data.message || "Invalid Email or Password!");
       }
     } catch (err) {
       console.error("Login Error:", err);
-      setErrorMsg("Server error! Please try again later.");
+      setErrorMsg("Server Error! Please try again.");
     } finally {
       setLoading(false);
     }
@@ -50,9 +54,7 @@ function Login() {
     <div className="auth-wrapper">
       <div className="auth-card">
         <h2 className="auth-title">Welcome Back to Aquafy</h2>
-        <p className="auth-subtitle">
-          Login to your account to explore aquatic pets
-        </p>
+        <p className="auth-subtitle">Login to explore aquatic pets</p>
 
         {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
