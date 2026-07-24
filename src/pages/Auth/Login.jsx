@@ -28,13 +28,13 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // 1. Save Token & User in LocalStorage 🚀
+        // Save Token & User Info
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user || data));
 
-        // 2. Navigate to Home Page (/) instead of Shop
+        // Redirect to Home Page (/)
         navigate("/");
-        window.location.reload(); // Refresh header/navbar state
+        window.location.reload(); 
       } else {
         setErrorMsg(data.message || "Invalid Email or Password!");
       }
@@ -47,17 +47,17 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Welcome Back to Aquafy</h2>
-        <p style={{ color: "#64748b", marginBottom: "20px" }}>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2 className="auth-title">Welcome Back to Aquafy</h2>
+        <p className="auth-subtitle">
           Login to your account to explore aquatic pets
         </p>
 
-        {errorMsg && <div className="error-alert">{errorMsg}</div>}
+        {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
-        <form onSubmit={handleLoginSubmit}>
-          <div className="input-group">
+        <form onSubmit={handleLoginSubmit} className="auth-form">
+          <div className="auth-input-group">
             <label>Email Address</label>
             <input
               type="email"
@@ -68,7 +68,7 @@ function Login() {
             />
           </div>
 
-          <div className="input-group">
+          <div className="auth-input-group">
             <label>Password</label>
             <input
               type="password"
@@ -79,12 +79,12 @@ function Login() {
             />
           </div>
 
-          <button type="submit" className="login-btn" disabled={loading}>
+          <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p style={{ marginTop: "15px", fontSize: "14px" }}>
+        <p className="auth-footer-text">
           Don't have an account? <Link to="/signup">Register here</Link>
         </p>
       </div>
