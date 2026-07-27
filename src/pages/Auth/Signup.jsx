@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { API_URL } from "../../config";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Auth.css";
 
 function Signup() {
@@ -10,91 +10,91 @@ function Signup() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const navigate = useNavigate();
-
-  const handleSignupSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    setErrorMsg("");
     setLoading(true);
+    setErrorMsg("");
 
     try {
       const res = await fetch(`${API_URL}/api/users/register`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        // Token Save
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+          })
+        );
 
-        // Redirect to Home Page
-        navigate("/");
-        window.location.reload();
+        window.location.href = "/";
       } else {
-        setErrorMsg(data.message || "Registration Failed!");
+        setErrorMsg(data.message || "Registration failed");
       }
     } catch (err) {
-      console.error("Signup Error:", err);
-      setErrorMsg("Server error! Check connection.");
+      setErrorMsg("Server error! Please check your connection.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Create an Account</h2>
-        <p className="auth-subtitle">Join Aquafy to buy amazing aquatic pets</p>
+        <h2>Create an Account</h2>
+        <p className="auth-subtitle">Join Aquafy to explore aquatic pets</p>
 
-        {errorMsg && <div className="auth-error">{errorMsg}</div>}
+        {errorMsg && <div className="error-alert">{errorMsg}</div>}
 
-        <form onSubmit={handleSignupSubmit} className="auth-form">
-          <div className="auth-input-group">
+        <form onSubmit={handleSignup}>
+          <div className="form-group">
             <label>Full Name</label>
             <input
               type="text"
-              required
-              placeholder="Enter full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              placeholder="John Doe"
+              required
             />
           </div>
 
-          <div className="auth-input-group">
+          <div className="form-group">
             <label>Email Address</label>
             <input
               type="email"
-              required
-              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="john@gmail.com"
+              required
             />
           </div>
 
-          <div className="auth-input-group">
+          <div className="form-group">
             <label>Password</label>
             <input
               type="password"
-              required
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
             />
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "Creating Account..." : "Sign Up"}
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
-        <p className="auth-footer-text">
+        <p className="auth-footer">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>

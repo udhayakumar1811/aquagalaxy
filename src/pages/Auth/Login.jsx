@@ -1,82 +1,72 @@
 import React, { useState } from "react";
 import { API_URL } from "../../config";
 import { useNavigate, Link } from "react-router-dom";
-import "./Auth.css";
+import "./Auth.css"; // Check your CSS path
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
   const navigate = useNavigate();
 
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMsg("");
-    setLoading(true);
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch(`${API_URL}/api/users/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch(`${API_URL}/api/users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Role Based Redirect
-        if (data.user && data.user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
-        window.location.reload();
-      } else {
-        setErrorMsg(data.message || "Invalid Email or Password!");
-      }
-    } catch (err) {
-      console.error("Login Error:", err);
-      setErrorMsg("Server error! Try again.");
-    } finally {
-      setLoading(false);
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+      
+      // 🚀 Reload and Navigate to Home
+      window.location.href = "/";
+    } else {
+      alert(data.message || "Login failed");
     }
-  };
+  } catch (err) {
+    alert("Server error!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Welcome Back to Aquafy</h2>
+        <h2>Welcome Back to Aquafy</h2>
         <p className="auth-subtitle">Login to explore aquatic pets</p>
 
-        {errorMsg && <div className="auth-error">{errorMsg}</div>}
+        {errorMsg && <div className="error-alert">{errorMsg}</div>}
 
-        <form onSubmit={handleLoginSubmit} className="auth-form">
-          <div className="auth-input-group">
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
             <label>Email Address</label>
             <input
               type="email"
-              required
-              placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="kumar123@gmail.com"
+              required
             />
           </div>
 
-          <div className="auth-input-group">
+          <div className="form-group">
             <label>Password</label>
             <input
               type="password"
-              required
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
             />
           </div>
 
@@ -85,7 +75,7 @@ function Login() {
           </button>
         </form>
 
-        <p className="auth-footer-text">
+        <p className="auth-footer">
           Don't have an account? <Link to="/signup">Register here</Link>
         </p>
       </div>
