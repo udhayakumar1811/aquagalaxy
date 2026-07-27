@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar/Navbar"; // Check path correctly
+import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/shop";
 import Product from "./pages/Product/Product";
@@ -14,7 +14,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 function App() {
   return (
     <>
-      {/* 🚀 App level-ல 1 முறை மட்டும் Navbar */}
+      {/* 🚀 Global level Navbar - Single instance only */}
       <Navbar />
 
       <Routes>

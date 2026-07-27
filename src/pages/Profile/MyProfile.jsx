@@ -14,7 +14,6 @@ function MyProfile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // FETCH PROFILE DATA FROM API
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -24,9 +23,7 @@ function MyProfile() {
     const fetchProfile = async () => {
       try {
         const res = await fetch(`${API_URL}/api/users/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
         if (res.ok) {
@@ -46,7 +43,6 @@ function MyProfile() {
     fetchProfile();
   }, [token, navigate]);
 
-  // UPDATE PROFILE API
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -73,23 +69,19 @@ function MyProfile() {
     }
   };
 
-  // DELETE ACCOUNT API
   const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone!")) {
+    if (window.confirm("Are you sure you want to delete your account?")) {
       try {
         const res = await fetch(`${API_URL}/api/users/profile`, {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (res.ok) {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
           alert("Account deleted successfully!");
-          navigate("/signup");
-          window.location.reload();
+          window.location.href = "/signup";
         } else {
           const data = await res.json();
           setMsg(data.message || "Failed to delete account");
@@ -100,57 +92,41 @@ function MyProfile() {
     }
   };
 
-  if (loading) return <div className="profile-loading">Loading Profile...</div>;
+  if (loading) return <div style={{ textAlign: "center", padding: "50px" }}>Loading Profile...</div>;
 
   return (
-    <div className="profile-container">
+    <div style={{ maxWidth: "500px", margin: "50px auto", padding: "20px", background: "#fff", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
       <h2>My Profile</h2>
-      {msg && <p className="profile-msg">{msg}</p>}
+      {msg && <p style={{ color: "green", fontWeight: "bold" }}>{msg}</p>}
 
       {!isEditing ? (
-        <div className="profile-card">
+        <div>
           <p><strong>Name:</strong> {profile.name}</p>
           <p><strong>Email:</strong> {profile.email}</p>
           <p><strong>Role:</strong> {profile.role || "user"}</p>
 
-          <div className="profile-actions">
-            <button className="btn-edit" onClick={() => setIsEditing(true)}>
+          <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            <button style={{ padding: "10px 15px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }} onClick={() => setIsEditing(true)}>
               Edit Details
             </button>
-            <button className="btn-delete" onClick={handleDeleteAccount}>
+            <button style={{ padding: "10px 15px", backgroundColor: "#dc3545", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }} onClick={handleDeleteAccount}>
               Delete Account
             </button>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleUpdate} className="profile-form">
-          <div className="form-group">
+        <form onSubmit={handleUpdate}>
+          <div style={{ marginBottom: "15px" }}>
             <label>Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
           </div>
-          <div className="form-group">
+          <div style={{ marginBottom: "15px" }}>
             <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
           </div>
-          <div className="form-buttons">
-            <button type="submit" className="btn-save">Save Changes</button>
-            <button
-              type="button"
-              className="btn-cancel"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button type="submit" style={{ padding: "10px 15px", backgroundColor: "#28a745", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}>Save Changes</button>
+            <button type="button" onClick={() => setIsEditing(false)} style={{ padding: "10px 15px", backgroundColor: "#6c757d", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}>Cancel</button>
           </div>
         </form>
       )}

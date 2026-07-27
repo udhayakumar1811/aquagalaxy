@@ -1,7 +1,3 @@
-/* ==========================================
-   Navbar Layout Structure
-   ========================================== */
-
 .navbar {
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -23,13 +19,9 @@
   color: #333;
 }
 
-/* ==========================================
-   Navigation Menu Layout
-   ========================================== */
-
 .menu {
   display: flex;
-  list-style: none; /* Bullet points-ஐ நீக்கும் */
+  list-style: none;
   margin: 0;
   padding: 0;
   gap: 30px;
@@ -46,10 +38,6 @@
 .menu a:hover {
   color: #0099cc;
 }
-
-/* ==========================================
-   Icons Layout
-   ========================================== */
 
 .icons {
   display: flex;
@@ -81,10 +69,6 @@
   font-size: 10px;
   font-weight: bold;
 }
-
-/* ==========================================
-   Profile Dropdown Styling
-   ========================================== */
 
 .profile-wrapper {
   position: relative;

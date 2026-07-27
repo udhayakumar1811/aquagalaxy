@@ -24,7 +24,7 @@ function Navbar() {
     }
   }, []);
 
-  // Dropdown-க்கு வெளியே எங்க கிளிக் பண்ணினாலும் Close ஆகும்
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -87,7 +87,7 @@ function Navbar() {
             )}
           </NavLink>
 
-          {/* 🎯 PROFILE DROPDOWN WRAPPER */}
+          {/* PROFILE DROPDOWN */}
           <div className="profile-wrapper" ref={dropdownRef}>
             <button
               className="profile-icon-btn"

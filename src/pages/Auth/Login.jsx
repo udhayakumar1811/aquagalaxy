@@ -1,43 +1,49 @@
 import React, { useState } from "react";
 import { API_URL } from "../../config";
-import { useNavigate, Link } from "react-router-dom";
-import "./Auth.css"; // Check your CSS path
+import { Link } from "react-router-dom";
+import "./Auth.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const navigate = useNavigate();
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
 
-  try {
-    const res = await fetch(`${API_URL}/api/users/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data));
-      
-      // 🚀 Reload and Navigate to Home
-      window.location.href = "/";
-    } else {
-      alert(data.message || "Login failed");
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+          })
+        );
+        window.location.href = "/";
+      } else {
+        setErrorMsg(data.message || "Invalid Email or Password");
+      }
+    } catch (err) {
+      setErrorMsg("Server error! Please wait while server wakes up.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    alert("Server error!");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="auth-container">
@@ -71,7 +77,7 @@ const handleLogin = async (e) => {
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Connecting Server... Please wait" : "Login"}
           </button>
         </form>
 

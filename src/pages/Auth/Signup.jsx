@@ -35,13 +35,12 @@ function Signup() {
             role: data.role,
           })
         );
-
         window.location.href = "/";
       } else {
         setErrorMsg(data.message || "Registration failed");
       }
     } catch (err) {
-      setErrorMsg("Server error! Please check your connection.");
+      setErrorMsg("Server error! Please try again.");
     } finally {
       setLoading(false);
     }
@@ -90,7 +89,7 @@ function Signup() {
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "Signing up..." : "Sign Up"}
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
