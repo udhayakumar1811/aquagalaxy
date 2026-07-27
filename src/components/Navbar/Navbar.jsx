@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./Navbar.css";
 import {
   FaSearch,
@@ -7,12 +7,14 @@ import {
   FaUser,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 
 function Navbar() {
   const { cart } = useContext(CartContext);
   const [user, setUser] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,10 +24,26 @@ function Navbar() {
     }
   }, []);
 
+  // Dropdown-க்கு வெளியே எங்க கிளிக் பண்ணினாலும் Close ஆகும்
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    setShowDropdown(false);
     navigate("/login");
+    window.location.reload();
   };
 
   return (
@@ -64,47 +82,64 @@ function Navbar() {
             style={{ position: "relative" }}
           >
             <FaShoppingCart />
-            {cart.length > 0 && (
+            {cart && cart.length > 0 && (
               <span className="cart-badge">{cart.length}</span>
             )}
           </NavLink>
 
-          {/* User Logged In Check */}
-          {user ? (
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
+          {/* 🎯 PROFILE DROPDOWN WRAPPER */}
+          <div className="profile-wrapper" ref={dropdownRef}>
+            <button
+              className="profile-icon-btn"
+              onClick={() => setShowDropdown(!showDropdown)}
+              title="Profile"
             >
-              <span
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  color: "#ff6b00",
-                }}
-              >
-                Hi, {user?.name ? user.name.split(" ")[0] : "User"}
-              </span>
-              <button
-                onClick={handleLogout}
-                title="Logout"
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "#222",
-                }}
-              >
-                <FaSignOutAlt />
-              </button>
-            </div>
-          ) : (
-            <NavLink to="/login" className="icon-link" title="Login">
               <FaUser />
-            </NavLink>
-          )}
+            </button>
+
+            {showDropdown && (
+              <div className="profile-dropdown">
+                {user ? (
+                  <>
+                    <div className="dropdown-user-info">
+                      Hi, {user?.name ? user.name.split(" ")[0] : "User"}
+                    </div>
+                    <hr />
+                    <Link
+                      to="/profile"
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="dropdown-item logout-btn"
+                    >
+                      <FaSignOutAlt style={{ marginRight: "8px" }} /> Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      Register
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
