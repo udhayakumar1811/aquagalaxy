@@ -1,4 +1,88 @@
 /* ==========================================
+   Navbar Layout Structure
+   ========================================== */
+
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* ==========================================
+   Navigation Menu Layout
+   ========================================== */
+
+.menu {
+  display: flex;
+  list-style: none; /* Bullet points-ஐ நீக்கும் */
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.menu a.active,
+.menu a:hover {
+  color: #0099cc;
+}
+
+/* ==========================================
+   Icons Layout
+   ========================================== */
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.icons a {
+  color: #333;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.icons a:hover,
+.icons a.active {
+  color: #0099cc;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #0099cc;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* ==========================================
    Profile Dropdown Styling
    ========================================== */
 

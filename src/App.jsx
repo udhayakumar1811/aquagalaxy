@@ -1,21 +1,21 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/Navbar/Navbar"; // Check path correctly
 import Home from "./pages/Home/Home";
 import Shop from "./pages/Shop/shop";
 import Product from "./pages/Product/Product";
 import Cart from "./pages/Cart/Cart";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
-import MyProfile from "./pages/Profile/MyProfile"; // 👈 Profile Page Import
+import MyProfile from "./pages/Profile/MyProfile";
 import Dashboard from "./pages/Admin/Dashboard";
 
 function App() {
   return (
     <>
-      {/* 🟢 Navbar visible on all pages */}
-      <Navbar /> 
+      {/* 🚀 App level-ல 1 முறை மட்டும் Navbar */}
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -24,10 +24,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        
-        {/* 🟢 Profile Route Added */}
-        <Route path="/profile" element={<MyProfile />} /> 
-        
+        <Route path="/profile" element={<MyProfile />} />
         <Route path="/admin" element={<Dashboard />} />
       </Routes>
     </>
