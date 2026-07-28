@@ -47,42 +47,51 @@ function Signup() {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-wrapper">
       <div className="auth-card">
-        <h2>Create an Account</h2>
+        <h2 className="auth-title">Create an Account</h2>
         <p className="auth-subtitle">Join Aquafy to explore aquatic pets</p>
 
-        {errorMsg && <div className="error-alert">{errorMsg}</div>}
+        {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
-        <form onSubmit={handleSignup}>
-          <div className="form-group">
+        <form onSubmit={handleSignup} className="auth-form">
+          <div className="auth-input-group">
             <label>Full Name</label>
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="John Doe"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="auth-input-group">
             <label>Email Address</label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="john@gmail.com"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="auth-input-group">
             <label>Password</label>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="••••••••"
               required
             />
@@ -93,7 +102,7 @@ function Signup() {
           </button>
         </form>
 
-        <p className="auth-footer">
+        <p className="auth-footer-text">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>

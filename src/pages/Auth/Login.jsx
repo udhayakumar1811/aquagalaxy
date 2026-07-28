@@ -46,31 +46,37 @@ function Login() {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-wrapper">
       <div className="auth-card">
-        <h2>Welcome Back to Aquafy</h2>
+        <h2 className="auth-title">Welcome Back to Aquafy</h2>
         <p className="auth-subtitle">Login to explore aquatic pets</p>
 
-        {errorMsg && <div className="error-alert">{errorMsg}</div>}
+        {errorMsg && <div className="auth-error">{errorMsg}</div>}
 
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
+        <form onSubmit={handleLogin} className="auth-form">
+          <div className="auth-input-group">
             <label>Email Address</label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="kumar123@gmail.com"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="auth-input-group">
             <label>Password</label>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (errorMsg) setErrorMsg("");
+              }}
               placeholder="••••••••"
               required
             />
@@ -81,7 +87,7 @@ function Login() {
           </button>
         </form>
 
-        <p className="auth-footer">
+        <p className="auth-footer-text">
           Don't have an account? <Link to="/signup">Register here</Link>
         </p>
       </div>
