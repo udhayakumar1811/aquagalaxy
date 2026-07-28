@@ -2,8 +2,9 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
+
 import Home from "./pages/Home/Home";
-import Shop from "./pages/Shop/shop";
+import Shop from "./pages/Shop/Shop";
 import Product from "./pages/Product/Product";
 import Cart from "./pages/Cart/Cart";
 import Login from "./pages/Auth/Login";
@@ -14,7 +15,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 function App() {
   return (
     <>
-      {/* 🚀 Global level Navbar - Single instance only */}
+      {/* Global Navbar */}
       <Navbar />
 
       <Routes>
