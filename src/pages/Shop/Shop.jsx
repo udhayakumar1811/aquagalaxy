@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Footer from "../../components/Footer/Footer";
 import { Link, useLocation } from "react-router-dom";
 import { API_URL, getImageUrl } from "../../config";
-import "./shop.css";
+import './Shop.css'
 
 function Shop() {
   const [products, setProducts] = useState([]);
