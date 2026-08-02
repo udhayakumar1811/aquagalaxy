@@ -212,7 +212,7 @@
 }
 
 /* ACTION BUTTONS */
-.action-btn {
+.admin-table .action-btn {
   background: none;
   border: none;
   font-size: 16px;
@@ -222,17 +222,17 @@
   margin-right: 6px;
 }
 
-.action-btn.edit {
+.admin-table .action-btn.edit {
   color: #0284c7;
   background-color: #e0f2fe;
 }
 
-.action-btn.delete {
+.admin-table .action-btn.delete {
   color: #ef4444;
   background-color: #fee2e2;
 }
 
-.action-btn:hover {
+.admin-table .action-btn:hover {
   opacity: 0.8;
 }
 
@@ -279,4 +279,126 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* Wrap tables so they scroll horizontally instead of breaking the layout */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+  min-width: 560px;
+}
+
+/* Sidebar toggle button - hidden on desktop, shown on mobile/tablet */
+.sidebar-toggle-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-dark);
+  cursor: pointer;
+  margin-right: 14px;
+  padding: 4px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1200;
+  }
+
+  .admin-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .admin-main-content {
+    margin-left: 0;
+    padding: 25px 20px;
+  }
+
+  .sidebar-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1150;
+  }
+
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-main-content {
+    padding: 20px 15px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 22px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .panel-card {
+    padding: 18px;
+  }
+
+  .modal-overlay {
+    padding: 20px;
+  }
+
+  .modal-card {
+    padding: 22px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 }

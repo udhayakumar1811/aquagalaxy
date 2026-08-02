@@ -6,16 +6,20 @@ import {
   FaShoppingCart,
   FaUser,
   FaSignOutAlt,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 
 function Navbar() {
   const { cart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -37,6 +41,19 @@ function Navbar() {
     };
   }, []);
 
+  // Close the mobile menu automatically whenever the route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent background scrolling while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -53,20 +70,66 @@ function Navbar() {
           <h2>Aquafy</h2>
         </div>
 
-        <ul className="menu">
+        <ul className={`menu ${mobileMenuOpen ? "menu-open" : ""}`}>
           <li>
-            <NavLink to="/">Home</NavLink>
+            <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>Home</NavLink>
           </li>
           <li>
-            <NavLink to="/shop">Shop</NavLink>
+            <NavLink to="/shop" onClick={() => setMobileMenuOpen(false)}>Shop</NavLink>
           </li>
           <li>
-            <NavLink to="/about">About</NavLink>
+            <NavLink to="/about" onClick={() => setMobileMenuOpen(false)}>About</NavLink>
           </li>
           <li>
-            <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</NavLink>
           </li>
+
+          {/* Mobile-only quick links: search/wishlist/account collapse into the
+              slide-down menu on small screens since their icons are hidden there */}
+          <li className="mobile-only-link">
+            <NavLink to="/search" onClick={() => setMobileMenuOpen(false)}>
+              <FaSearch /> Search
+            </NavLink>
+          </li>
+          <li className="mobile-only-link">
+            <NavLink to="/wishlist" onClick={() => setMobileMenuOpen(false)}>
+              <FaHeart /> Wishlist
+            </NavLink>
+          </li>
+          {user ? (
+            <>
+              <li className="mobile-only-link">
+                <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>
+                  <FaUser /> My Profile
+                </NavLink>
+              </li>
+              <li className="mobile-only-link">
+                <button
+                  className="mobile-logout-btn"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  <FaSignOutAlt /> Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li className="mobile-only-link">
+              <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>
+                <FaUser /> Login / Register
+              </NavLink>
+            </li>
+          )}
         </ul>
+
+        {mobileMenuOpen && (
+          <div
+            className="menu-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+        )}
 
         <div className="icons">
           <NavLink to="/search" className="icon-link">
@@ -140,6 +203,15 @@ function Navbar() {
               </div>
             )}
           </div>
+
+          <button
+            className="hamburger-btn"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
       </div>
     </nav>

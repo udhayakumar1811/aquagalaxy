@@ -165,3 +165,56 @@
 .checkout-btn:hover {
   background: #ff6b00;
 }
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 768px) {
+  .cart-wrapper {
+    flex-direction: column;
+  }
+
+  .cart-items,
+  .cart-summary {
+    min-width: 100%;
+  }
+}
+
+/* Below this width the single-row layout (image, name, qty, total, remove)
+   gets too cramped, so the card wraps onto two rows: image+name+remove on
+   top, quantity controls and the line total below. */
+@media (max-width: 560px) {
+  .cart-container {
+    padding: 30px 14px;
+  }
+
+  .cart-item-card {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+
+  .cart-item-card img {
+    order: 1;
+  }
+
+  .item-details {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .remove-btn {
+    order: 3;
+  }
+
+  .quantity-controls {
+    order: 4;
+    flex-basis: 100%;
+  }
+
+  .item-total {
+    order: 5;
+    margin-left: auto;
+  }
+}

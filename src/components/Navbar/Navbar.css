@@ -158,3 +158,135 @@
   background-color: #ffe6e6;
   color: #c0392b;
 }
+
+/* Hamburger toggle button - hidden on desktop, shown on mobile */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1.4rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+/* Mobile-only quick links live inside the drawer menu; hidden on desktop
+   since the equivalent icons already appear in the .icons row */
+.mobile-only-link {
+  display: none;
+}
+
+.mobile-logout-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: inherit;
+  color: #e74c3c;
+  cursor: pointer;
+  padding: 12px 0;
+}
+
+/* Dimmed backdrop shown behind the mobile drawer menu */
+.menu-backdrop {
+  display: none;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 992px) {
+  .menu {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px 16px;
+  }
+
+  .logo h2 {
+    font-size: 1.3rem;
+  }
+
+  /* Collapse the horizontal menu into a slide-down drawer panel */
+  .menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: min(300px, 80vw);
+    background-color: #ffffff;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 80px 24px 24px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1100;
+    overflow-y: auto;
+  }
+
+  .menu.menu-open {
+    transform: translateX(0);
+  }
+
+  .menu li {
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0;
+    width: 100%;
+  }
+
+  /* Reveal the mobile-only quick links inside the drawer */
+  .mobile-only-link {
+    display: block;
+  }
+
+  /* Hide the icons that already have an equivalent inside the drawer;
+     keep cart visible since its badge count is useful at a glance */
+  .icons {
+    gap: 14px;
+  }
+
+  .icons a.icon-link:not([href="/cart"]),
+  .profile-wrapper {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1050;
+  }
+}
+
+@media (max-width: 400px) {
+  .menu {
+    width: 100vw;
+  }
+
+  .icons {
+    gap: 10px;
+  }
+}

@@ -102,3 +102,55 @@
 .back-link:hover {
     color: #0099cc;
 }
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 992px) {
+    .details-section {
+        padding: 60px 20px;
+    }
+
+    .product-name {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .details-wrapper {
+        gap: 30px;
+    }
+
+    .image-container,
+    .info-container {
+        min-width: 100%;
+    }
+
+    .image-container img {
+        max-height: 380px;
+    }
+}
+
+@media (max-width: 480px) {
+    .details-section {
+        padding: 40px 16px;
+    }
+
+    .product-name {
+        font-size: 1.7rem;
+    }
+
+    .details-price {
+        font-size: 1.4rem;
+    }
+
+    .description {
+        font-size: 0.95rem;
+    }
+
+    .cart-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,51 @@
+.wishlist-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.wishlist-empty-icon {
+  font-size: 3rem;
+  color: #ffd0d0;
+  margin-bottom: 20px;
+}
+
+.wishlist-page .section-title {
+  margin-bottom: 16px;
+}
+
+.wishlist-empty-text {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.wishlist-shop-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #0099cc;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.wishlist-shop-btn:hover {
+  background-color: #0077a3;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 480px) {
+  .wishlist-page {
+    padding: 70px 20px;
+  }
+
+  .wishlist-shop-btn {
+    width: 100%;
+  }
+}

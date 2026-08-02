@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { API_URL, getImageUrl } from "../../config";
 import { CartContext } from "../../context/CartContext"; // 👈 Context Import
@@ -32,7 +31,6 @@ function Product() {
   if (loading) {
     return (
       <>
-        <Navbar />
         <div style={{ padding: "100px", textAlign: "center" }}>
           <h2>Loading Product...</h2>
         </div>
@@ -44,7 +42,6 @@ function Product() {
   if (!product) {
     return (
       <>
-        <Navbar />
         <div style={{ padding: "100px", textAlign: "center" }}>
           <h2>Product Not Found!</h2>
           <Link to="/shop" className="back-link">← Back to Shop Page</Link>
@@ -56,7 +53,6 @@ function Product() {
 
   return (
     <>
-      <Navbar />
       <section className="details-section">
         <div className="details-wrapper">
           <div className="image-container">

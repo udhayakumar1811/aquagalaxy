@@ -31,7 +31,7 @@ function Categories() {
         <h2 className="title-main">Categories</h2>
       </div>
 
-      <div className="container">
+      <div className="categories-container">
         {loading ? (
           <p style={{ textAlign: "center", gridColumn: "1 / -1" }}>
             Loading Categories...

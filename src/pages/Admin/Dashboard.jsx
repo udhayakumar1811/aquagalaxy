@@ -9,7 +9,8 @@ import {
   FaCog, 
   FaSignOutAlt,
   FaEdit,
-  FaTrash
+  FaTrash,
+  FaBars
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
@@ -20,6 +21,7 @@ function Dashboard() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -284,9 +286,9 @@ function Dashboard() {
   return (
     <div className="admin-layout">
       {/* SIDEBAR NAVIGATION */}
-      <aside className="admin-sidebar">
+      <aside className={`admin-sidebar ${sidebarOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-brand">Aquafy Admin</div>
-        <ul className="sidebar-menu">
+        <ul className="sidebar-menu" onClick={() => setSidebarOpen(false)}>
           <li
             className={`sidebar-item ${activeTab === "overview" ? "active" : ""}`}
             onClick={() => setActiveTab("overview")}
@@ -320,9 +322,24 @@ function Dashboard() {
         </ul>
       </aside>
 
+      {/* Backdrop shown behind the sidebar drawer on mobile */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* MAIN DASHBOARD PANEL */}
       <main className="admin-main-content">
         <div className="dashboard-header">
+          <button
+            className="sidebar-toggle-btn"
+            onClick={() => setSidebarOpen((prev) => !prev)}
+            aria-label="Toggle sidebar menu"
+          >
+            <FaBars />
+          </button>
           <h1>Dashboard Overview</h1>
         </div>
 
@@ -398,6 +415,7 @@ function Dashboard() {
 
             <div className="panel-card">
               <h2>Existing Categories ({categories.length})</h2>
+              <div className="table-responsive">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -435,6 +453,7 @@ function Dashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
         )}
@@ -526,6 +545,7 @@ function Dashboard() {
 
             <div className="panel-card">
               <h2>All Products ({products.length})</h2>
+              <div className="table-responsive">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -567,6 +587,7 @@ function Dashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
         )}

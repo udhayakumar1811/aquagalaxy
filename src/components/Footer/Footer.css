@@ -46,12 +46,16 @@
 .footer-box ul li {
     font-size: 13px; /* Smaller bullet text size metrics */
     margin-bottom: 8px; /* Compressed element tracking spaces down from 12px */
-    cursor: pointer;
     color: #cbd5e1;
+}
+
+.footer-box ul li a {
+    color: inherit;
+    cursor: pointer;
     transition: color 0.2s ease;
 }
 
-.footer-box ul li:hover {
+.footer-box ul li a:hover {
     color: #38bdf8;
 }
 

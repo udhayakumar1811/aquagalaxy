@@ -1,4 +1,5 @@
 import "./Footer.css";
+import { Link } from "react-router-dom";
 import {
   FaFacebookF,
   FaInstagram,
@@ -26,10 +27,10 @@ function Footer() {
         <div className="footer-box">
           <h3>Quick Links</h3>
           <ul>
-            <li>Home</li>
-            <li>Shop</li>
-            <li>About</li>
-            <li>Contact</li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/shop">Shop</Link></li>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
 
@@ -37,10 +38,10 @@ function Footer() {
         <div className="footer-box">
           <h3>Categories</h3>
           <ul>
-            <li>Betta Fish</li>
-            <li>Guppy Fish</li>
-            <li>Aquarium Tanks</li>
-            <li>Fish Food</li>
+            <li><Link to="/shop">Betta Fish</Link></li>
+            <li><Link to="/shop">Guppy Fish</Link></li>
+            <li><Link to="/shop">Aquarium Tanks</Link></li>
+            <li><Link to="/shop">Fish Food</Link></li>
           </ul>
         </div>
 

@@ -5,14 +5,14 @@
 }
 
 /* Header & Watermark Styling */
-.section-title-wrap {
+.top-selling .section-title-wrap {
     text-align: center;
     position: relative;
     margin-bottom: 40px;
     padding: 0 15px;
 }
 
-.title-bg {
+.top-selling .title-bg {
     position: absolute;
     top: 25%;
     left: 50%;
@@ -25,7 +25,7 @@
     z-index: 1;
 }
 
-.title-main {
+.top-selling .title-main {
     font-size: 30px;
     font-weight: 700;
     color: #0d1b3e;
@@ -62,7 +62,7 @@
 }
 
 /* 6-Column Single Row Desktop Layout Container */
-.top-selling .container {
+.top-selling-container {
     max-width: 1440px; 
     margin: 0 auto;
     padding: 0 20px;
@@ -72,7 +72,7 @@
 }
 
 /* Product Card Box Frame model */
-.product-card {
+.top-selling .product-card {
     background: #ffffff;
     border-radius: 6px;
     padding: 10px; 
@@ -83,7 +83,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.product-card:hover {
+.top-selling .product-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.06);
 }
@@ -113,14 +113,14 @@
 }
 
 /* Reduced Text Typography constraints */
-.details-left {
+.top-selling .details-left {
     display: flex;
     flex-direction: column;
     gap: 2px;
     text-align: left;
 }
 
-.details-left h3 {
+.top-selling .details-left h3 {
     font-size: 13px; 
     font-weight: 600;
     color: #444;
@@ -128,7 +128,7 @@
     line-height: 1.3;
 }
 
-.details-left .price {
+.top-selling .details-left .price {
     font-size: 15px; 
     font-weight: 700;
     color: #0d1b3e;
@@ -143,14 +143,14 @@
 }
 
 /* Streamlined Right Actions Box Sidebar Panel */
-.details-right-actions {
+.top-selling .details-right-actions {
     display: flex;
     flex-direction: column;
     gap: 8px; 
     align-items: center;
 }
 
-.action-btn {
+.top-selling .action-btn {
     background: none;
     border: none;
     color: #b0bac9;
@@ -163,7 +163,7 @@
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
-.action-btn:hover {
+.top-selling .action-btn:hover {
     color: #ff6b00;
     transform: scale(1.15);
 }
@@ -196,23 +196,23 @@
    ======================================================= */
 
 @media (max-width: 1200px) {
-    .top-selling .container {
+    .top-selling-container {
         grid-template-columns: repeat(4, 1fr); 
         gap: 15px;
     }
 }
 
 @media (max-width: 992px) {
-    .top-selling .container {
+    .top-selling-container {
         grid-template-columns: repeat(3, 1fr); 
     }
-    .title-bg {
+    .top-selling .title-bg {
         font-size: 55px;
     }
 }
 
 @media (max-width: 768px) {
-    .top-selling .container {
+    .top-selling-container {
         grid-template-columns: repeat(2, 1fr); 
     }
 }
@@ -221,15 +221,15 @@
     .top-selling {
         padding: 40px 0;
     }
-    .top-selling .container {
+    .top-selling-container {
         grid-template-columns: 1fr; 
-        max-width: 290px;
+        max-width: 420px;
         padding: 0;
     }
-    .title-bg {
+    .top-selling .title-bg {
         display: none;
     }
-    .title-main {
+    .top-selling .title-main {
         font-size: 24px;
     }
 }

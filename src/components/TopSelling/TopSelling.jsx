@@ -44,7 +44,7 @@ function TopSelling() {
         </ul>
       </div>
 
-      <div className="container">
+      <div className="top-selling-container">
         {products.map((item) => (
           <div className="product-card" key={item.id}>
             

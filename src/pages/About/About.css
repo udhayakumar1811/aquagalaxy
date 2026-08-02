@@ -1,0 +1,128 @@
+.about-hero {
+  background: linear-gradient(135deg, #0b1c3f 0%, #0b2c77 100%);
+  color: #fff;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.about-hero-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about-hero-content h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.about-hero-content p {
+  font-size: 1.05rem;
+  color: #d6e0f5;
+  line-height: 1.6;
+}
+
+.about-section {
+  padding: 70px 0 40px;
+}
+
+.about-values-section {
+  padding: 40px 0 80px;
+  background: #fff6f3;
+}
+
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.about-text {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  color: #444;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.about-value-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f4f8;
+}
+
+.about-value-icon {
+  font-size: 2rem;
+  color: #ff6b00;
+  margin-bottom: 14px;
+}
+
+.about-value-card h3 {
+  font-size: 1.05rem;
+  color: #0b1c3f;
+  margin-bottom: 8px;
+}
+
+.about-value-card p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 992px) {
+  .about-values-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 70px 20px;
+  }
+
+  .about-hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .about-section {
+    padding: 50px 0 30px;
+  }
+
+  .about-values-section {
+    padding: 30px 0 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-hero {
+    padding: 55px 16px;
+  }
+
+  .about-hero-content h1 {
+    font-size: 1.7rem;
+  }
+
+  .about-hero-content p {
+    font-size: 0.95rem;
+  }
+
+  .about-values-grid {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}

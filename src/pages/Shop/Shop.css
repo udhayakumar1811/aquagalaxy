@@ -23,7 +23,7 @@
 }
 
 /* Individual Product Card Blueprint */
-.product-card {
+.products-grid .product-card {
     background: #fff;
     border: 1px solid #eef2f5;
     border-radius: 12px;
@@ -34,12 +34,12 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.product-card:hover {
+.products-grid .product-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-.product-card img {
+.products-grid .product-card img {
     width: 100%;
     height: 200px;
     object-fit: cover; /* Images structural deformation thadukka use aagum */
@@ -47,13 +47,13 @@
     margin-bottom: 15px;
 }
 
-.product-card h3 {
+.products-grid .product-card h3 {
     font-size: 1.15rem;
     color: #333;
     margin: 10px 0;
 }
 
-.product-price {
+.products-grid .product-price {
     font-weight: 700;
     font-size: 1.2rem;
     color: #0099cc;
@@ -61,7 +61,7 @@
 }
 
 /* Action button configurations */
-.view-btn {
+.products-grid .view-btn {
     display: inline-block;
     padding: 10px 20px;
     background-color: #0099cc;
@@ -73,6 +73,32 @@
     transition: background-color 0.2s ease;
 }
 
-.view-btn:hover {
+.products-grid .view-btn:hover {
     background-color: #0077a3;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 768px) {
+    .shop-container {
+        padding: 40px 16px;
+    }
+
+    .shop-title {
+        font-size: 1.7rem;
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        gap: 18px;
+    }
+
+    .products-grid .product-card {
+        width: 100%;
+        max-width: 320px;
+    }
 }

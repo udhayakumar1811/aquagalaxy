@@ -92,44 +92,60 @@ function MyProfile() {
     }
   };
 
-  if (loading) return <div style={{ textAlign: "center", padding: "50px" }}>Loading Profile...</div>;
+  if (loading) {
+    return <div className="profile-loading">Loading Profile...</div>;
+  }
 
   return (
-    <div style={{ maxWidth: "500px", margin: "50px auto", padding: "20px", background: "#fff", borderRadius: "10px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-      <h2>My Profile</h2>
-      {msg && <p style={{ color: "green", fontWeight: "bold" }}>{msg}</p>}
+    <div className="profile-page">
+      <div className="profile-container">
+        <h2 className="profile-heading">My Profile</h2>
+        {msg && <p className="profile-message">{msg}</p>}
 
-      {!isEditing ? (
-        <div>
-          <p><strong>Name:</strong> {profile.name}</p>
-          <p><strong>Email:</strong> {profile.email}</p>
-          <p><strong>Role:</strong> {profile.role || "user"}</p>
+        {!isEditing ? (
+          <div className="profile-card">
+            <p><strong>Name:</strong> {profile.name}</p>
+            <p><strong>Email:</strong> {profile.email}</p>
+            <p><strong>Role:</strong> {profile.role || "user"}</p>
 
-          <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-            <button style={{ padding: "10px 15px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }} onClick={() => setIsEditing(true)}>
-              Edit Details
-            </button>
-            <button style={{ padding: "10px 15px", backgroundColor: "#dc3545", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }} onClick={handleDeleteAccount}>
-              Delete Account
-            </button>
+            <div className="profile-actions">
+              <button className="btn-edit" onClick={() => setIsEditing(true)}>
+                Edit Details
+              </button>
+              <button className="btn-delete" onClick={handleDeleteAccount}>
+                Delete Account
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <form onSubmit={handleUpdate}>
-          <div style={{ marginBottom: "15px" }}>
-            <label>Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label>Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: "100%", padding: "8px", marginTop: "5px" }} />
-          </div>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button type="submit" style={{ padding: "10px 15px", backgroundColor: "#28a745", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}>Save Changes</button>
-            <button type="button" onClick={() => setIsEditing(false)} style={{ padding: "10px 15px", backgroundColor: "#6c757d", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}>Cancel</button>
-          </div>
-        </form>
-      )}
+        ) : (
+          <form className="profile-form" onSubmit={handleUpdate}>
+            <div className="profile-form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="profile-form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-buttons">
+              <button type="submit" className="btn-save">Save Changes</button>
+              <button type="button" className="btn-cancel" onClick={() => setIsEditing(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

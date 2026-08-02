@@ -129,3 +129,22 @@
         font-size: 38px;
     }
 }
+
+@media (max-width: 420px) {
+    .countdown {
+        gap: 8px;
+    }
+
+    .time-box {
+        width: 56px;
+        height: 56px;
+    }
+
+    .time-box h3 {
+        font-size: 17px;
+    }
+
+    .offer-content h1 {
+        font-size: 32px;
+    }
+}

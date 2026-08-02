@@ -1,30 +1,64 @@
+.profile-page {
+  padding: 40px 20px;
+  min-height: 60vh;
+}
+
+.profile-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #555;
+}
+
 .profile-container {
   max-width: 500px;
-  margin: 50px auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 30px;
   background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-heading {
+  color: #0b1c3f;
+  margin-bottom: 15px;
+}
+
+.profile-message {
+  color: #22c55e;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
 .profile-card p {
   font-size: 16px;
   margin: 12px 0;
+  color: #333;
+  word-break: break-word;
 }
 
-.profile-actions, .form-buttons {
+.profile-actions,
+.form-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin-top: 20px;
 }
 
-.btn-edit, .btn-save {
+.btn-edit,
+.btn-save {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover,
+.btn-save:hover {
+  background-color: #0069d9;
 }
 
 .btn-delete {
@@ -34,6 +68,12 @@
   padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
 }
 
 .btn-cancel {
@@ -43,4 +83,61 @@
   padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.profile-form-group {
+  margin-bottom: 15px;
+}
+
+.profile-form-group label {
+  display: block;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.profile-form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.profile-form-group input:focus {
+  border-color: #2563eb;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 560px) {
+  .profile-page {
+    padding: 24px 14px;
+  }
+
+  .profile-container {
+    padding: 22px 18px;
+  }
+
+  .profile-actions,
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .profile-actions button,
+  .form-buttons button {
+    width: 100%;
+  }
 }

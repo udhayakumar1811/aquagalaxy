@@ -5,14 +5,14 @@
 }
 
 /* Header & Watermark Styling */
-.section-title-wrap {
+.gallery .section-title-wrap {
     text-align: center;
     position: relative;
     margin-bottom: 25px; /* Shrunk from 35px */
     padding: 0 15px;
 }
 
-.title-bg {
+.gallery .title-bg {
     position: absolute;
     top: 25%;
     left: 50%;
@@ -25,7 +25,7 @@
     z-index: 1;
 }
 
-.title-main {
+.gallery .title-main {
     font-size: 22px; /* Downscaled main headline size */
     font-weight: 700;
     color: #0b1c3f;
@@ -156,7 +156,7 @@
 
     .gallery-container {
         grid-template-columns: 1fr; 
-        max-width: 240px; /* Constrains total view row tightly down on smartphones */
+        max-width: 420px;
         padding: 0;
     }
 
@@ -165,11 +165,11 @@
         aspect-ratio: 1.1 / 1;
     }
 
-    .title-bg {
+    .gallery .title-bg {
         display: none;
     }
 
-    .title-main {
+    .gallery .title-main {
         font-size: 20px;
     }
 }

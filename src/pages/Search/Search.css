@@ -1,0 +1,121 @@
+.search-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px 90px;
+}
+
+.search-bar-wrap {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+.search-bar-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 1rem;
+}
+
+.search-bar-input {
+  width: 100%;
+  padding: 13px 16px 13px 44px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-bar-input:focus {
+  border-color: #0099cc;
+}
+
+.search-status-msg {
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+  margin: 30px 0;
+}
+
+.search-error {
+  color: #e11d48;
+}
+
+.search-results-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.search-result-card {
+  display: block;
+  background: #fff;
+  border: 1px solid #eef2f5;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  color: inherit;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.search-result-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.search-result-card h3 {
+  font-size: 1rem;
+  color: #333;
+  margin: 6px 0;
+}
+
+.search-result-price {
+  font-weight: 700;
+  color: #0099cc;
+}
+
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+@media (max-width: 992px) {
+  .search-results-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .search-page {
+    padding: 40px 16px 60px;
+  }
+
+  .search-results-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-results-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .search-bar-input {
+    font-size: 0.95rem;
+  }
+}
