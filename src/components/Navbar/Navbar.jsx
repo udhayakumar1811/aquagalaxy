@@ -6,20 +6,17 @@ import {
   FaShoppingCart,
   FaUser,
   FaSignOutAlt,
-  FaBars,
-  FaTimes,
+  FaUserShield,
 } from "react-icons/fa";
-import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { CartContext } from "../../context/CartContext";
 
 function Navbar() {
   const { cart } = useContext(CartContext);
   const [user, setUser] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -28,7 +25,6 @@ function Navbar() {
     }
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -40,19 +36,6 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // Close the mobile menu automatically whenever the route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-
-  // Prevent background scrolling while the mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenuOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -70,66 +53,20 @@ function Navbar() {
           <h2>Aquafy</h2>
         </div>
 
-        <ul className={`menu ${mobileMenuOpen ? "menu-open" : ""}`}>
+        <ul className="menu">
           <li>
-            <NavLink to="/" onClick={() => setMobileMenuOpen(false)}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/shop" onClick={() => setMobileMenuOpen(false)}>Shop</NavLink>
+            <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/about" onClick={() => setMobileMenuOpen(false)}>About</NavLink>
+            <NavLink to="/shop">Shop</NavLink>
           </li>
           <li>
-            <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</NavLink>
+            <NavLink to="/about">About</NavLink>
           </li>
-
-          {/* Mobile-only quick links: search/wishlist/account collapse into the
-              slide-down menu on small screens since their icons are hidden there */}
-          <li className="mobile-only-link">
-            <NavLink to="/search" onClick={() => setMobileMenuOpen(false)}>
-              <FaSearch /> Search
-            </NavLink>
+          <li>
+            <NavLink to="/contact">Contact</NavLink>
           </li>
-          <li className="mobile-only-link">
-            <NavLink to="/wishlist" onClick={() => setMobileMenuOpen(false)}>
-              <FaHeart /> Wishlist
-            </NavLink>
-          </li>
-          {user ? (
-            <>
-              <li className="mobile-only-link">
-                <NavLink to="/profile" onClick={() => setMobileMenuOpen(false)}>
-                  <FaUser /> My Profile
-                </NavLink>
-              </li>
-              <li className="mobile-only-link">
-                <button
-                  className="mobile-logout-btn"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    handleLogout();
-                  }}
-                >
-                  <FaSignOutAlt /> Logout
-                </button>
-              </li>
-            </>
-          ) : (
-            <li className="mobile-only-link">
-              <NavLink to="/login" onClick={() => setMobileMenuOpen(false)}>
-                <FaUser /> Login / Register
-              </NavLink>
-            </li>
-          )}
         </ul>
-
-        {mobileMenuOpen && (
-          <div
-            className="menu-backdrop"
-            onClick={() => setMobileMenuOpen(false)}
-          ></div>
-        )}
 
         <div className="icons">
           <NavLink to="/search" className="icon-link">
@@ -150,7 +87,7 @@ function Navbar() {
             )}
           </NavLink>
 
-          {/* PROFILE DROPDOWN */}
+          {/* PROFILE DROPDOWN WRAPPER */}
           <div className="profile-wrapper" ref={dropdownRef}>
             <button
               className="profile-icon-btn"
@@ -168,6 +105,19 @@ function Navbar() {
                       Hi, {user?.name ? user.name.split(" ")[0] : "User"}
                     </div>
                     <hr />
+                    
+                    {/* 🎯 SHOW ADMIN DASHBOARD LINK IF USER IS ADMIN */}
+                    {user.role === "admin" && (
+                      <Link
+                        to="/admin"
+                        className="dropdown-item"
+                        onClick={() => setShowDropdown(false)}
+                        style={{ color: "#0099cc", fontWeight: "bold" }}
+                      >
+                        <FaUserShield style={{ marginRight: "8px" }} /> Admin Panel
+                      </Link>
+                    )}
+
                     <Link
                       to="/profile"
                       className="dropdown-item"
@@ -203,15 +153,6 @@ function Navbar() {
               </div>
             )}
           </div>
-
-          <button
-            className="hamburger-btn"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
         </div>
       </div>
     </nav>

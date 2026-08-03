@@ -24,6 +24,7 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
+        // Save token and user details to localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem(
           "user",
@@ -34,12 +35,18 @@ function Login() {
             role: data.role,
           })
         );
-        window.location.href = "/";
+
+        // 🎯 ADMIN CHECK & REDIRECT LOGIC
+        if (data.role === "admin") {
+          window.location.href = "/admin"; // Redirect to Admin Dashboard
+        } else {
+          window.location.href = "/"; // Redirect to Home Page
+        }
       } else {
         setErrorMsg(data.message || "Invalid Email or Password");
       }
     } catch (err) {
-      setErrorMsg("Server error! Please wait while server wakes up.");
+      setErrorMsg("Server error! Please try again.");
     } finally {
       setLoading(false);
     }
@@ -63,7 +70,7 @@ function Login() {
                 setEmail(e.target.value);
                 if (errorMsg) setErrorMsg("");
               }}
-              placeholder="kumar123@gmail.com"
+              placeholder="admin@gmail.com"
               required
             />
           </div>
@@ -83,7 +90,7 @@ function Login() {
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? "Connecting Server... Please wait" : "Login"}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
