@@ -43,6 +43,9 @@ function Dashboard() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
 
+  // Get Admin Auth Token
+  const token = localStorage.getItem("token");
+
   const fetchData = async () => {
     try {
       const [resCat, resProd] = await Promise.all([
@@ -52,8 +55,8 @@ function Dashboard() {
       const catData = await resCat.json();
       const prodData = await resProd.json();
 
-      setCategories(catData);
-      setProducts(prodData);
+      setCategories(Array.isArray(catData) ? catData : []);
+      setProducts(Array.isArray(prodData) ? prodData : []);
       setLoading(false);
     } catch (err) {
       console.error("Error loading dashboard data:", err);
@@ -72,6 +75,9 @@ function Dashboard() {
 
     const res = await fetch(`${API_URL}/api/upload`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`, // 🚀 Token added
+      },
       body: formData,
     });
 
@@ -93,18 +99,25 @@ function Dashboard() {
 
       const res = await fetch(`${API_URL}/api/category`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
         body: JSON.stringify({ name: catName, image: imagePath, isCategory: true }),
       });
+
+      const data = await res.json();
 
       if (res.ok) {
         setMessage("✅ Category Created Successfully!");
         setCatName("");
         setCatImageFile(null);
         fetchData();
+      } else {
+        setMessage(`❌ ${data.message || "Failed to add category"}`);
       }
     } catch (err) {
-      setMessage("❌ Error adding category");
+      setMessage("❌ Error adding category: " + err.message);
     } finally {
       setCatUploading(false);
     }
@@ -126,7 +139,10 @@ function Dashboard() {
 
       const res = await fetch(`${API_URL}/api/category/${catId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
         body: JSON.stringify({
           name: editingCategory.name,
           image: imagePath,
@@ -134,15 +150,17 @@ function Dashboard() {
         }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setMessage("✏️ Category Updated Successfully!");
         setEditingCategory(null);
         fetchData();
       } else {
-        setMessage("❌ Failed to update category");
+        setMessage(`❌ ${data.message || "Failed to update category"}`);
       }
     } catch (err) {
-      setMessage("❌ Error updating category");
+      setMessage("❌ Error updating category: " + err.message);
     }
   };
 
@@ -151,17 +169,25 @@ function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/category/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/api/category/${id}`, { 
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
+      });
       if (res.ok) {
         setMessage("🗑️ Category Deleted!");
         fetchData();
+      } else {
+        const data = await res.json();
+        setMessage(`❌ ${data.message || "Failed to delete category"}`);
       }
     } catch (err) {
       setMessage("❌ Error deleting category");
     }
   };
 
-  // 2. ADD PRODUCT (STRICT DROPDOWN CHECK 🚀)
+  // 2. ADD PRODUCT
   const handleAddProduct = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -182,7 +208,10 @@ function Dashboard() {
 
       const res = await fetch(`${API_URL}/api/products`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
         body: JSON.stringify({
           category_id: prodCategory,
           name: prodName,
@@ -208,7 +237,7 @@ function Dashboard() {
         setMessage(`❌ ${data.message || "Failed to add product"}`);
       }
     } catch (err) {
-      setMessage("❌ Error adding product");
+      setMessage("❌ Error adding product: " + err.message);
     } finally {
       setProdUploading(false);
     }
@@ -230,7 +259,10 @@ function Dashboard() {
 
       const res = await fetch(`${API_URL}/api/products/${editingProduct._id || editingProduct.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
         body: JSON.stringify({
           category_id: catId,
           name: editingProduct.name,
@@ -241,15 +273,17 @@ function Dashboard() {
         }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setMessage("✏️ Product Updated Successfully!");
         setEditingProduct(null);
         fetchData();
       } else {
-        setMessage("❌ Failed to update product");
+        setMessage(`❌ ${data.message || "Failed to update product"}`);
       }
     } catch (err) {
-      setMessage("❌ Error updating product");
+      setMessage("❌ Error updating product: " + err.message);
     }
   };
 
@@ -258,17 +292,25 @@ function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/api/products/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/api/products/${id}`, { 
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // 🚀 Token added
+        },
+      });
       if (res.ok) {
-        setMessage("🗑️ Category Deleted!");
+        setMessage("🗑️ Product Deleted!");
         fetchData();
+      } else {
+        const data = await res.json();
+        setMessage(`❌ ${data.message || "Failed to delete product"}`);
       }
     } catch (err) {
       setMessage("❌ Error deleting product");
     }
   };
 
-  // HELPER: RENDER CATEGORY NAME SAFELY 🚀
+  // HELPER: RENDER CATEGORY NAME SAFELY
   const renderCategoryName = (p) => {
     if (p.category_id && typeof p.category_id === "object" && p.category_id.name) {
       return p.category_id.name;
@@ -279,6 +321,7 @@ function Dashboard() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
   };
@@ -322,7 +365,6 @@ function Dashboard() {
         </ul>
       </aside>
 
-      {/* Backdrop shown behind the sidebar drawer on mobile */}
       {sidebarOpen && (
         <div
           className="sidebar-backdrop"
@@ -465,7 +507,6 @@ function Dashboard() {
               <h2>Add New Product</h2>
               <form onSubmit={handleAddProduct}>
                 <div className="form-grid-2">
-                  {/* CATEGORY SELECT DROPDOWN FIX WITH PLACEHOLDER 🚀 */}
                   <div className="admin-input-group">
                     <label>Select Category (Required)</label>
                     <select
