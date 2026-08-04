@@ -16,7 +16,9 @@ function Signup() {
     setErrorMsg("");
 
     try {
-      const res = await fetch(`${API_URL}/api/users/register`, {
+      // API_URL-ன் இறுதியில் `/` இருந்தால் அதை நீக்கி சரியான Format உருவாக்குகிறது
+      const baseUrl = API_URL ? API_URL.replace(/\/$/, "") : "";
+      const res = await fetch(`${baseUrl}/api/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -40,7 +42,11 @@ function Signup() {
         setErrorMsg(data.message || "Registration failed");
       }
     } catch (err) {
-      setErrorMsg("Server error! Please try again.");
+      console.error("Signup Fetch Error:", err);
+      // Real Network/Response Error Message-ஐ திரையில் காட்டுவோம்
+      setErrorMsg(
+        err.message || "Unable to connect to server. Please check backend/network."
+      );
     } finally {
       setLoading(false);
     }

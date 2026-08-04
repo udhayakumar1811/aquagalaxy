@@ -15,7 +15,9 @@ function Login() {
     setErrorMsg("");
 
     try {
-      const res = await fetch(`${API_URL}/api/users/login`, {
+      // API_URL-ன் இறுதியில் `/` இருந்தால் அதை நீக்கி சரியான Format உருவாக்குகிறது
+      const baseUrl = API_URL ? API_URL.replace(/\/$/, "") : "";
+      const res = await fetch(`${baseUrl}/api/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -46,7 +48,11 @@ function Login() {
         setErrorMsg(data.message || "Invalid Email or Password");
       }
     } catch (err) {
-      setErrorMsg("Server error! Please try again.");
+      console.error("Login Fetch Error:", err);
+      // Real Network/Response Exception Error Message-ஐ காட்டுவோம்
+      setErrorMsg(
+        err.message || "Unable to connect to server. Please check backend/network."
+      );
     } finally {
       setLoading(false);
     }
