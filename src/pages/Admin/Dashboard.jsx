@@ -10,7 +10,8 @@ import {
   FaSignOutAlt,
   FaEdit,
   FaTrash,
-  FaBars
+  FaBars,
+  FaSpinner
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
@@ -39,9 +40,12 @@ function Dashboard() {
   const [prodDesc, setProdDesc] = useState("");
   const [prodUploading, setProdUploading] = useState(false);
 
-  // Edit Modals State
+  // Edit Modals Loading States 🚀
   const [editingCategory, setEditingCategory] = useState(null);
+  const [catUpdating, setCatUpdating] = useState(false);
+
   const [editingProduct, setEditingProduct] = useState(null);
+  const [prodUpdating, setProdUpdating] = useState(false);
 
   // Get Admin Auth Token
   const token = localStorage.getItem("token");
@@ -76,7 +80,7 @@ function Dashboard() {
     const res = await fetch(`${API_URL}/api/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // 🚀 Token added
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
@@ -101,7 +105,7 @@ function Dashboard() {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ name: catName, image: imagePath, isCategory: true }),
       });
@@ -123,10 +127,11 @@ function Dashboard() {
     }
   };
 
-  // EDIT CATEGORY SUBMIT
+  // 🎯 EDIT CATEGORY SUBMIT WITH LOADING
   const handleUpdateCategorySubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setCatUpdating(true); // 🚀 Loading Start
 
     try {
       let imagePath = editingCategory.image;
@@ -141,7 +146,7 @@ function Dashboard() {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: editingCategory.name,
@@ -161,6 +166,8 @@ function Dashboard() {
       }
     } catch (err) {
       setMessage("❌ Error updating category: " + err.message);
+    } finally {
+      setCatUpdating(false); // 🚀 Loading End
     }
   };
 
@@ -172,7 +179,7 @@ function Dashboard() {
       const res = await fetch(`${API_URL}/api/category/${id}`, { 
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.ok) {
@@ -210,7 +217,7 @@ function Dashboard() {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           category_id: prodCategory,
@@ -243,10 +250,11 @@ function Dashboard() {
     }
   };
 
-  // EDIT PRODUCT SUBMIT
+  // 🎯 EDIT PRODUCT SUBMIT WITH LOADING
   const handleUpdateProductSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setProdUpdating(true); // 🚀 Loading Start
 
     try {
       let imagePath = editingProduct.image;
@@ -261,7 +269,7 @@ function Dashboard() {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           category_id: catId,
@@ -284,6 +292,8 @@ function Dashboard() {
       }
     } catch (err) {
       setMessage("❌ Error updating product: " + err.message);
+    } finally {
+      setProdUpdating(false); // 🚀 Loading End
     }
   };
 
@@ -295,7 +305,7 @@ function Dashboard() {
       const res = await fetch(`${API_URL}/api/products/${id}`, { 
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`, // 🚀 Token added
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.ok) {
@@ -450,7 +460,11 @@ function Dashboard() {
                   </div>
                 </div>
                 <button type="submit" className="submit-btn" disabled={catUploading}>
-                  {catUploading ? "Uploading & Saving..." : "Add Category"}
+                  {catUploading ? (
+                    <span><FaSpinner className="spin-icon" /> Uploading & Saving...</span>
+                  ) : (
+                    "Add Category"
+                  )}
                 </button>
               </form>
             </div>
@@ -579,7 +593,11 @@ function Dashboard() {
                 </div>
 
                 <button type="submit" className="submit-btn" disabled={prodUploading}>
-                  {prodUploading ? "Uploading & Saving..." : "Add Product"}
+                  {prodUploading ? (
+                    <span><FaSpinner className="spin-icon" /> Uploading & Saving...</span>
+                  ) : (
+                    "Add Product"
+                  )}
                 </button>
               </form>
             </div>
@@ -633,7 +651,7 @@ function Dashboard() {
           </div>
         )}
 
-        {/* EDIT CATEGORY MODAL */}
+        {/* 🎯 EDIT CATEGORY MODAL (WITH LOADING INDICATOR) */}
         {editingCategory && (
           <div className="modal-overlay">
             <div className="modal-card">
@@ -659,15 +677,28 @@ function Dashboard() {
                 </div>
 
                 <div className="modal-actions">
-                  <button type="submit" className="submit-btn">Save Changes</button>
-                  <button type="button" className="cancel-btn" onClick={() => setEditingCategory(null)}>Cancel</button>
+                  <button type="submit" className="submit-btn" disabled={catUpdating}>
+                    {catUpdating ? (
+                      <span><FaSpinner className="spin-icon" /> Saving Changes...</span>
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="cancel-btn" 
+                    disabled={catUpdating} 
+                    onClick={() => setEditingCategory(null)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>
           </div>
         )}
 
-        {/* EDIT PRODUCT MODAL */}
+        {/* 🎯 EDIT PRODUCT MODAL (WITH LOADING INDICATOR) */}
         {editingProduct && (
           <div className="modal-overlay">
             <div className="modal-card">
@@ -731,8 +762,21 @@ function Dashboard() {
                 </div>
 
                 <div className="modal-actions">
-                  <button type="submit" className="submit-btn">Save Changes</button>
-                  <button type="button" className="cancel-btn" onClick={() => setEditingProduct(null)}>Cancel</button>
+                  <button type="submit" className="submit-btn" disabled={prodUpdating}>
+                    {prodUpdating ? (
+                      <span><FaSpinner className="spin-icon" /> Saving Changes...</span>
+                    ) : (
+                      "Save Changes"
+                    )}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="cancel-btn" 
+                    disabled={prodUpdating} 
+                    onClick={() => setEditingProduct(null)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </form>
             </div>

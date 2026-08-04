@@ -78,6 +78,8 @@
 
 .dashboard-header {
   margin-bottom: 30px;
+  display: flex;
+  align-items: center;
 }
 
 .dashboard-header h1 {
@@ -171,6 +173,7 @@
   background-color: #ffffff;
 }
 
+/* BUTTONS & LOADING STYLES */
 .submit-btn {
   background-color: var(--primary-accent);
   color: #ffffff;
@@ -181,15 +184,42 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   background-color: #e05e00;
 }
 
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* 🚀 SPINNER ROTATING ANIMATION */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
 /* DATA TABLES */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .admin-table {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
   margin-top: 15px;
 }
@@ -281,18 +311,12 @@
   cursor: pointer;
 }
 
-/* Wrap tables so they scroll horizontally instead of breaking the layout */
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.admin-table {
-  min-width: 560px;
-}
-
-/* Sidebar toggle button - hidden on desktop, shown on mobile/tablet */
+/* SIDEBAR TOGGLE & BACKDROP */
 .sidebar-toggle-btn {
   display: none;
   background: none;
@@ -302,11 +326,6 @@
   cursor: pointer;
   margin-right: 14px;
   padding: 4px;
-}
-
-.dashboard-header {
-  display: flex;
-  align-items: center;
 }
 
 .sidebar-backdrop {
