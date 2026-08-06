@@ -1,83 +1,133 @@
-import { useState } from "react";
-import "./TopSelling.css";
-import { FaHeart, FaShoppingCart, FaStar, FaSearch } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { API_URL, getImageUrl } from "../../config";
+import { FaHeart, FaSearch, FaShoppingCart, FaStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import "./TopProducts.css";
 
-// 1. IMPORT YOUR LOCAL IMAGES FIRST
-import catFish from "../../assets/images/cat-fish.jpg";
-import catFood from "../../assets/images/cat-food.jpg";
-import catAquariums from "../../assets/images/cat-aquariums.jpg";
-import catPlants from "../../assets/images/cat-plants.jpg";
-import catAccessories from "../../assets/images/cat-accessories.jpg";
+function TopProducts() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [loading, setLoading] = useState(true);
 
-// 2. ASSIGN THE IMPORTED VARIABLES TO YOUR PRODUCTS ARRAY
-const products = [
-  { id: 1, name: "Goldfish", price: "$89.00", image: catFish },
-  { id: 2, name: "guppy", price: "$89.00", image: catFood },
-  { id: 3, name: "Tank", price: "$89.00", image: catFood },
-  { id: 4, name: "Plant", price: "$89.00", image: catAquariums },
-  { id: 5, name: "Betta", price: "$89.00", image: catPlants },
-  { id: 6, name: "Farm Food", price: "$89.00", image: catAccessories }
-  
-];
+  // 1. Fetch Products & Categories from Backend API
+  useEffect(() => {
+    const fetchTopProducts = async () => {
+      try {
+        const [resProd, resCat] = await Promise.all([
+          fetch(`${API_URL}/api/products`),
+          fetch(`${API_URL}/api/category`),
+        ]);
 
-function TopSelling() {
-  const [activeTab, setActiveTab] = useState("Aquariums");
-  const tabs = ["All", "Aquariums", "Aquarium Fish", "Fish Food"];
+        const prodData = await resProd.json();
+        const catData = await resCat.json();
+
+        setProducts(Array.isArray(prodData) ? prodData : []);
+        setCategories(Array.isArray(catData) ? catData : []);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching top products:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchTopProducts();
+  }, []);
+
+  // 2. Filter Logic based on Category Click
+  const filteredProducts = products.filter((p) => {
+    if (selectedCategory === "All") return true;
+
+    // Check category by object or string ID / Name
+    const catName = p.category_id?.name || "";
+    const catId = String(p.category_id?._id || p.category_id?.id || p.category_id);
+
+    return (
+      catName.toLowerCase() === selectedCategory.toLowerCase() ||
+      catId === selectedCategory
+    );
+  });
 
   return (
-    <section className="top-selling">
-      
-      <div className="section-title-wrap">
-        <span className="title-bg">Top Products</span>
-        <h2 className="title-main">Top Selling Products</h2>
+    <section className="top-products-section">
+      <div className="container">
+        <h2 className="section-title">Top Selling Products</h2>
 
-        <ul className="tabs">
-          {tabs.map((tab) => (
-            <li 
-              key={tab} 
-              className={activeTab === tab ? "active" : ""} 
-              onClick={() => setActiveTab(tab)}
+        {/* Dynamic Category Filter Buttons */}
+        <div className="filter-buttons">
+          <button
+            className={`filter-btn ${selectedCategory === "All" ? "active" : ""}`}
+            onClick={() => setSelectedCategory("All")}
+          >
+            All
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat._id || cat.id}
+              className={`filter-btn ${
+                selectedCategory === cat.name || selectedCategory === (cat._id || cat.id)
+                  ? "active"
+                  : ""
+              }`}
+              onClick={() => setSelectedCategory(cat.name)}
             >
-              {tab}
-            </li>
+              {cat.name}
+            </button>
           ))}
-        </ul>
-      </div>
+        </div>
 
-      <div className="top-selling-container">
-        {products.map((item) => (
-          <div className="product-card" key={item.id}>
-            
-            <div className="product-img-box">
-              <img src={item.image} alt={item.name} />
-            </div>
+        {/* Products Grid */}
+        {loading ? (
+          <div className="loading-text">Loading Products...</div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="no-products-text">No products found in this category.</div>
+        ) : (
+          <div className="products-grid">
+            {filteredProducts.slice(0, 6).map((product) => (
+              <div key={product._id || product.id} className="product-card">
+                <div className="product-img-wrapper">
+                  <img
+                    src={getImageUrl(product.image)}
+                    alt={product.name}
+                    className="product-img"
+                  />
+                </div>
 
-            <div className="product-details-row">
-              <div className="details-left">
-                <h3>{item.name}</h3>
-                <h4 className="price">{item.price}</h4>
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
+                <div className="product-info">
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-price">₹{product.price}</p>
+
+                  <div className="product-rating">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} className="star-icon" />
+                    ))}
+                  </div>
+
+                  <div className="product-actions">
+                    <button className="icon-btn" title="Add to Wishlist">
+                      <FaHeart />
+                    </button>
+                    <button className="icon-btn" title="Quick View">
+                      <FaSearch />
+                    </button>
+                    <button className="icon-btn" title="Add to Cart">
+                      <FaShoppingCart />
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="details-right-actions">
-                <button className="action-btn" aria-label="Add to Wishlist"><FaHeart /></button>
-                <button className="action-btn" aria-label="Quick View"><FaSearch /></button>
-                <button className="action-btn" aria-label="Add to Cart"><FaShoppingCart /></button>
-              </div>
-            </div>
-
+            ))}
           </div>
-        ))}
-      </div>
+        )}
 
-      <div className="see-more-wrap">
-        <button className="see-more-btn">See More &rarr;</button>
+        <div className="see-more-wrapper">
+          <Link to="/shop" className="see-more-btn">
+            See More →
+          </Link>
+        </div>
       </div>
-
     </section>
   );
 }
 
-export default TopSelling;
+export default TopProducts;
