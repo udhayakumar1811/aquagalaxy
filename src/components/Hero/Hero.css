@@ -3,7 +3,7 @@
     min-height: 100vh;
     /* 🚀 Dark Blue Fallback Background + Hero Image */
     background-color: #0d1b2a;
-    background-image: url("../../assets/images/heroBgImage.png");
+    background-image: url("../../assets/images/heroBgImage.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
