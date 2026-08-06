@@ -1,6 +1,8 @@
 .hero {
     width: 100%;
     min-height: 100vh;
+    /* 🚀 Dark Blue Fallback Background + Hero Image */
+    background-color: #0d1b2a;
     background-image: url("../../assets/images/heroBgImage.png");
     background-size: cover;
     background-position: center;
@@ -11,7 +13,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px; /* Safe padding prevents contents touching viewport borders on short heights */
+    padding: 60px 20px;
+    will-change: transform;
 }
 
 .hero-overlay {
@@ -75,7 +78,7 @@
 /* 1. Tablets / Small Desktops (e.g. iPads, small laptops) */
 @media (max-width: 992px) {
     .hero-content h1 {
-        font-size: 46px; /* Smooth downscale to avoid layout stretching */
+        font-size: 46px;
     }
     .hero-description {
         max-width: 500px;
@@ -86,8 +89,8 @@
 /* 2. Landscape Mobile / Large Mobile Devices */
 @media (max-width: 768px) {
     .hero {
-        min-height: 100vh; /* Keeps fullscreen impact on mobile */
-        padding-top: 80px;  /* Leaves space for potential mobile navbars */
+        min-height: 100vh;
+        padding-top: 80px;
         padding-bottom: 80px;
     }
     .hero-content h1 {
@@ -104,20 +107,20 @@
         font-size: 15px;
     }
     .carousel-indicators-custom {
-        bottom: 20px; /* Slightly raises indicator panel out of extreme hardware margins */
+        bottom: 20px;
     }
 }
 
 /* 3. Small Mobile Devices (e.g., iPhone SE, older phones) */
 @media (max-width: 480px) {
     .hero-content h1 {
-        font-size: 30px; /* Strong downscale ensures title fits without single-letter word breaks */
+        font-size: 30px;
     }
     .hero-description {
         font-size: 13px;
     }
     .hero-btn {
-        width: 100%; /* Makes button hit-target full-width for easier thumb clicking on tiny viewports */
+        width: 100%;
         max-width: 240px;
     }
 }
