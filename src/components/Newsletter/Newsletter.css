@@ -1,0 +1,111 @@
+.newsletter {
+    padding: 50px 0; /* Reduced vertical section block padding down from 100px */
+    background: linear-gradient(135deg, #0099cc, #004466);
+    color: #fff;
+    width: 100%;
+}
+
+/* Compact Container Footprint Alignment */
+.newsletter-container {
+    max-width: 1020px; /* Constrained boundaries to force a tight, elegant horizontal split */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px; /* Reduced layout spacing from 50px */
+}
+
+.newsletter-content {
+    flex: 1.1;
+}
+
+.newsletter-content h2 {
+    font-size: 26px; /* Significantly downscaled text scale from 42px */
+    font-weight: 700;
+    margin-bottom: 6px; /* Tightened element gap spacing */
+    line-height: 1.2;
+}
+
+.newsletter-content p {
+    color: #f1f1f1;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Compact Forms Module Elements */
+.newsletter-form {
+    flex: 0.9; /* Slightly tighter width footprint layout distribution */
+    display: flex;
+    width: 100%;
+    max-width: 420px; /* Bounds total search input expansion explicitly */
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 12px 16px; /* Reduced from 18px for a sleek, compact profile */
+    border: none;
+    outline: none;
+    border-radius: 6px 0 0 6px;
+    font-size: 14px; /* Scaled text size metric down */
+    color: #333;
+}
+
+.newsletter-form button {
+    padding: 12px 25px; /* Tighter structural spacing parameters */
+    border: none;
+    background: #111827;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0 6px 6px 0;
+    transition: background 0.2s ease;
+}
+
+.newsletter-form button:hover {
+    background: #1f2937;
+}
+
+/* =======================================================
+   FULLY RESPONSIVE LAYOUT MATRIX BREAKPOINTS
+   ======================================================= */
+
+/* Small Notebooks & Tablets */
+@media (max-width: 768px) {
+    .newsletter {
+        padding: 40px 0;
+    }
+    
+    .newsletter-container {
+        flex-direction: column; /* Stacks column sections vertically down on small screens */
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .newsletter-content h2 {
+        font-size: 24px;
+    }
+    
+    .newsletter-form {
+        max-width: 100%; /* Spans out organically matching mobile row boundaries */
+    }
+}
+
+/* Narrow Smartphones viewports */
+@media (max-width: 480px) {
+    .newsletter-form {
+        flex-direction: column; /* Stacks form components for easier mobile thumbs hitting */
+        gap: 10px;
+    }
+    
+    .newsletter-form input {
+        border-radius: 6px;
+        width: 100%;
+    }
+    
+    .newsletter-form button {
+        border-radius: 6px;
+        width: 100%;
+    }
+}
