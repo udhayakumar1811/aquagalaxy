@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://aquagalaxy-backend.onrender.com/sitemap.xml"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://aquagalaxy-backend.onrender.com/api/$1"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "https://aquagalaxy-backend.onrender.com/uploads/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

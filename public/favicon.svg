@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="aquaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0077b6" />
+      <stop offset="100%" stop-color="#00b4d8" />
+    </linearGradient>
+    <linearGradient id="finGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4d2d" />
+      <stop offset="100%" stop-color="#ffa726" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="#0a2540" />
+  <!-- Water ripples -->
+  <path d="M12 44 Q 22 40, 32 44 T 52 44" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.75" />
+  <!-- Fish Body -->
+  <path d="M18 32 C 22 22, 38 22, 46 32 C 38 42, 22 42, 18 32 Z" fill="url(#aquaGrad)" />
+  <!-- Fish Tail -->
+  <path d="M18 32 L 8 22 Q 12 32, 8 42 Z" fill="url(#finGrad)" />
+  <!-- Top Fin -->
+  <path d="M30 24 Q 35 16, 40 25 Z" fill="url(#finGrad)" />
+  <!-- Aquatic Plant Accent -->
+  <circle cx="50" cy="46" r="3" fill="#059669" />
+  <circle cx="45" cy="48" r="2" fill="#10b981" />
+  <!-- Fish Eye -->
+  <circle cx="41" cy="30" r="2.5" fill="#ffffff" />
+  <circle cx="41.8" cy="29.5" r="1.2" fill="#0a2540" />
+</svg>
